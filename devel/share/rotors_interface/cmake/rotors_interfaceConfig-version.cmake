@@ -1,0 +1,1 @@
+/home/cheng/fault_tolerant_control/devel/.private/rotors_interface/share/rotors_interface/cmake/rotors_interfaceConfig-version.cmake

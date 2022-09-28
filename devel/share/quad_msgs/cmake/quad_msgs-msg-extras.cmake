@@ -1,0 +1,1 @@
+/home/cheng/fault_tolerant_control/devel/.private/quad_msgs/share/quad_msgs/cmake/quad_msgs-msg-extras.cmake

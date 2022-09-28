@@ -1,0 +1,6 @@
+devel_space: /home/cheng/fault_tolerant_control/devel
+install: false
+install_space: /home/cheng/fault_tolerant_control/install
+profile: default
+source_space: /home/cheng/fault_tolerant_control/src
+workspace: /home/cheng/fault_tolerant_control
