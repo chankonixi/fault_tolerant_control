@@ -8,6 +8,8 @@
 
 # modified environment variables
 export CMAKE_PREFIX_PATH="/home/cheng/fault_tolerant_control/devel/.private/offboard:$CMAKE_PREFIX_PATH"
+export LD_LIBRARY_PATH="/home/cheng/fault_tolerant_control/devel/.private/offboard/lib:$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="/home/cheng/fault_tolerant_control/devel/.private/offboard/lib/pkgconfig:$PKG_CONFIG_PATH"
 export PWD='/home/cheng/fault_tolerant_control/build/offboard'
 export ROSLISP_PACKAGE_DIRECTORIES="/home/cheng/fault_tolerant_control/devel/.private/offboard/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
 export ROS_PACKAGE_PATH="/home/cheng/fault_tolerant_control/src/offboard:$ROS_PACKAGE_PATH"
