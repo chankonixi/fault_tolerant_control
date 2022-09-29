@@ -2,13 +2,17 @@ ctrl_rate:      250.0 # control loop rate [Hz]
 failed_prop:    3     # 0, 1, 2, 3
 
 ############ gains for normal mode ###############
-# /*伪真机模型下的控制参数*/
-kp_pos:         [2.0, 2.0, 10.0]  #[5.0, 2.0, 10.0] 最佳:[2.0, 2.0, 10.0]
-kd_pos:         [1.5, 1.5, 8.0]   #[4.0, 1.5, 8.0]  最佳:[1.5, 1.5, 8.0]
-ki_pos:         [3.0, 3.0, 0.0]   #[3.0, 0.0, 0.0]  最佳:[3.0, 3.0, 0.0]
+# /*伪真机模型下的控制参数 改成P+PID*/
+kp_pos:         [6.0, 6.0, 12.0]    #[2.0, 2.0, 10.0]   #最优：
+kd_pos:         [0.0, 0.0, 0.0]    #无效
+ki_pos:         [0.0, 0.0, 0.0]    #无效
 
-k_att:          [43.0, 15.0, 2.0] # kp, kd, ki [45.0, 18.0, 0.0] 最佳:[43.0, 15.0, 2.0]
-k_yaw:          [2.0, 0.0, 0.0]   # kp, kd, ki [2.0, 0.0, 0.0]
+kp_vel:         [2.0, 2.0, 15.0]   #[2.0, 2.0, 10.0]   #最优：
+kd_vel:         [0.0, 0.0, 0.0]    #[1.5, 1.5, 8.0]    #最优：
+ki_vel:         [0.1, 0.1, 0.0]    #[3.0, 3.0, 0.0]    #最优：
+
+k_att:          [35.0, 12.0, 0.0] # kp, kd, ki [45.0, 18.0, 0.0] 最佳:[43.0, 15.0, 5.0]
+k_yaw:          [3.0, 0.0, 0.0]   # kp, kd, ki [2.0, 0.0, 0.0]
 
 ############# gains for failure mode ########
 # /*伪真机模型下的控制参数*/
@@ -55,7 +59,8 @@ maxVertAcc: 4.0 # max vertical acceleration
 maxHorzAcc: 4.0 # max horizontal acceleration
 maxNbErrInt: 4.0 # maximum integral error for nb
 maxPosErrInt: 10.0 # maximum integral error for pos
+maxVelErrInt: 10.0 # maximum integral error for vel
 maxHorzAccFail: 3.0 # max horiz acc in fail mode
 
-use_sigmoid_traj: true # use sigmoid traj instead of direct waypoint tracking
+use_sigmoid_traj: false # use sigmoid traj instead of direct waypoint tracking
 use_notch_filter: true # filter the periodic  pos / vel

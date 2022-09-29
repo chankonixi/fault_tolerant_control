@@ -1,0 +1,64 @@
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:[m[K In member function ‘[01m[Kvoid ftc::NDICtrl::stateUpdateCallback(const ConstPtr&)[m[K’:
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:208:14:[m[K [01;31m[Kerror: [m[K‘[01m[Kstruct ftc::QuadState[m[K’ has no member named ‘[01m[Kvelocity_old[m[K’; did you mean ‘[01m[Kvelocity[m[K’?
+       state_.[01;31m[Kvelocity_old[m[K.x()     =   state_.velocity.x();     //记录线速度
+              [01;31m[K^~~~~~~~~~~~[m[K
+              [32m[Kvelocity[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:209:14:[m[K [01;31m[Kerror: [m[K‘[01m[Kstruct ftc::QuadState[m[K’ has no member named ‘[01m[Kvelocity_old[m[K’; did you mean ‘[01m[Kvelocity[m[K’?
+       state_.[01;31m[Kvelocity_old[m[K.y()     =   state_.velocity.y();
+              [01;31m[K^~~~~~~~~~~~[m[K
+              [32m[Kvelocity[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:210:14:[m[K [01;31m[Kerror: [m[K‘[01m[Kstruct ftc::QuadState[m[K’ has no member named ‘[01m[Kvelocity_old[m[K’; did you mean ‘[01m[Kvelocity[m[K’?
+       state_.[01;31m[Kvelocity_old[m[K.z()     =   state_.velocity.z();
+              [01;31m[K^~~~~~~~~~~~[m[K
+              [32m[Kvelocity[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:[m[K In member function ‘[01m[Kvoid ftc::NDICtrl::controller_outerloop()[m[K’:
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:342:33:[m[K [01;31m[Kerror: [m[K‘[01m[Kstruct ftc::QuadState[m[K’ has no member named ‘[01m[Kvelocity_old[m[K’; did you mean ‘[01m[Kvelocity[m[K’?
+       velocity_oldused = state_.[01;31m[Kvelocity_old[m[K;
+                                 [01;31m[K^~~~~~~~~~~~[m[K
+                                 [32m[Kvelocity[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:368:28:[m[K [01;31m[Kerror: [m[K‘[01m[Kvel_err_int_[m[K’ was not declared in this scope
+       integrator3(vel_err, [01;31m[Kvel_err_int_[m[K, 1.0/ctrl_rate_, max_vel_err_int_);//SYSU_CODE 限幅暂时用pos
+                            [01;31m[K^~~~~~~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:368:28:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Knb_err_int_[m[K’
+       integrator3(vel_err, [01;36m[Kvel_err_int_[m[K, 1.0/ctrl_rate_, max_vel_err_int_);//SYSU_CODE 限幅暂时用pos
+                            [01;36m[K^~~~~~~~~~~~[m[K
+                            [32m[Knb_err_int_[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:368:58:[m[K [01;31m[Kerror: [m[K‘[01m[Kmax_vel_err_int_[m[K’ was not declared in this scope
+       integrator3(vel_err, vel_err_int_, 1.0/ctrl_rate_, [01;31m[Kmax_vel_err_int_[m[K);//SYSU_CODE 限幅暂时用pos
+                                                          [01;31m[K^~~~~~~~~~~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:368:58:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Kmax_pos_err_int_[m[K’
+       integrator3(vel_err, vel_err_int_, 1.0/ctrl_rate_, [01;36m[Kmax_vel_err_int_[m[K);//SYSU_CODE 限幅暂时用pos
+                                                          [01;36m[K^~~~~~~~~~~~~~~~[m[K
+                                                          [32m[Kmax_pos_err_int_[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:397:7:[m[K [01;31m[Kerror: [m[K‘[01m[Kv_des_[m[K’ was not declared in this scope
+       [01;31m[Kv_des_[m[K = Kp_pos * pos_err;//SYSU_CODE
+       [01;31m[K^~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:397:7:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Ka_des_[m[K’
+       [01;36m[Kv_des_[m[K = Kp_pos * pos_err;//SYSU_CODE
+       [01;36m[K^~~~~~[m[K
+       [32m[Ka_des_[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:399:28:[m[K [01;31m[Kerror: [m[K‘[01m[Kvel_err_int_[m[K’ was not declared in this scope
+       integrator3(vel_err, [01;31m[Kvel_err_int_[m[K, 1.0/ctrl_rate_, max_vel_err_int_);//SYSU_CODE
+                            [01;31m[K^~~~~~~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:399:28:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Knb_err_int_[m[K’
+       integrator3(vel_err, [01;36m[Kvel_err_int_[m[K, 1.0/ctrl_rate_, max_vel_err_int_);//SYSU_CODE
+                            [01;36m[K^~~~~~~~~~~~[m[K
+                            [32m[Knb_err_int_[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:399:58:[m[K [01;31m[Kerror: [m[K‘[01m[Kmax_vel_err_int_[m[K’ was not declared in this scope
+       integrator3(vel_err, vel_err_int_, 1.0/ctrl_rate_, [01;31m[Kmax_vel_err_int_[m[K);//SYSU_CODE
+                                                          [01;31m[K^~~~~~~~~~~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:399:58:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Kmax_pos_err_int_[m[K’
+       integrator3(vel_err, vel_err_int_, 1.0/ctrl_rate_, [01;36m[Kmax_vel_err_int_[m[K);//SYSU_CODE
+                                                          [01;36m[K^~~~~~~~~~~~~~~~[m[K
+                                                          [32m[Kmax_pos_err_int_[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:[m[K In member function ‘[01m[Kbool ftc::NDICtrl::loadParams()[m[K’:
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:544:41:[m[K [01;31m[Kerror: [m[K‘[01m[Kmax_vel_err_int_[m[K’ was not declared in this scope
+     check &= pnh_.param("maxVelErrInt", [01;31m[Kmax_vel_err_int_[m[K, 30.0);//SYSU_CODE
+                                         [01;31m[K^~~~~~~~~~~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:544:41:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Kmax_pos_err_int_[m[K’
+     check &= pnh_.param("maxVelErrInt", [01;36m[Kmax_vel_err_int_[m[K, 30.0);//SYSU_CODE
+                                         [01;36m[K^~~~~~~~~~~~~~~~[m[K
+                                         [32m[Kmax_pos_err_int_[m[K
+make[2]: *** [CMakeFiles/ftc_ctrl.dir/src/ftc_ctrl.cpp.o] Error 1
+make[1]: *** [CMakeFiles/ftc_ctrl.dir/all] Error 2
+make: *** [all] Error 2

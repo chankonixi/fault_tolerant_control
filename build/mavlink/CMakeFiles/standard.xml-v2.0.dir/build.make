@@ -79,7 +79,7 @@ standard-v2.0-cxx-stamp: /home/cheng/fault_tolerant_control/src/mavlink/message_
 standard-v2.0-cxx-stamp: /home/cheng/fault_tolerant_control/src/mavlink/message_definitions/v1.0/common.xml
 standard-v2.0-cxx-stamp: /home/cheng/fault_tolerant_control/src/mavlink/pymavlink/tools/mavgen.py
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/cheng/fault_tolerant_control/build/mavlink/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating standard-v2.0-cxx-stamp"
-	/usr/bin/env PYTHONPATH="/home/cheng/fault_tolerant_control/src/mavlink:/opt/ros/melodic/lib/python2.7/dist-packages" /usr/bin/python2.7 /home/cheng/fault_tolerant_control/src/mavlink/pymavlink/tools/mavgen.py --lang=C++11 --wire-protocol=2.0 --output=include/v2.0 /home/cheng/fault_tolerant_control/src/mavlink/message_definitions/v1.0/standard.xml
+	/usr/bin/env PYTHONPATH="/home/cheng/fault_tolerant_control/src/mavlink:/home/cheng/fault_tolerant_control/devel/lib/python2.7/dist-packages:/opt/ros/melodic/lib/python2.7/dist-packages" /usr/bin/python2.7 /home/cheng/fault_tolerant_control/src/mavlink/pymavlink/tools/mavgen.py --lang=C++11 --wire-protocol=2.0 --output=include/v2.0 /home/cheng/fault_tolerant_control/src/mavlink/message_definitions/v1.0/standard.xml
 	touch standard-v2.0-cxx-stamp
 
 standard.xml-v2.0: CMakeFiles/standard.xml-v2.0

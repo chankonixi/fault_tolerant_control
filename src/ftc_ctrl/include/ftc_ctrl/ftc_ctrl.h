@@ -45,6 +45,7 @@ namespace ftc
     ros::Time timestamp;
     Eigen::Vector3d position;
     Eigen::Vector3d velocity;
+    Eigen::Vector3d velocity_old;
     Eigen::Quaterniond orientation;
     Eigen::Vector3d bodyrates;
   };
@@ -108,6 +109,7 @@ namespace ftc
     Eigen::Vector3d nb_err_int_;
     Eigen::Vector3d pos_err_int_;   
     Eigen::Vector3d a_des_;
+    Eigen::Vector3d v_des_;
     Eigen::Matrix4d G_inv_;
     Eigen::Vector4d thrust_;
     Eigen::Vector3d pos_design_;
@@ -127,6 +129,7 @@ namespace ftc
     double heading_target_;
     
     std::vector<double> Kp_pos_vec_, Kd_pos_vec_, Ki_pos_vec_, K_att_;
+    std::vector<double> Kp_vel_vec_, Kd_vel_vec_, Ki_vel_vec_;
     std::vector<double> Kp_pos_vec_fail_, Kd_pos_vec_fail_, Ki_pos_vec_fail_, K_att_fail_;
     std::vector<double> K_yaw_;
 

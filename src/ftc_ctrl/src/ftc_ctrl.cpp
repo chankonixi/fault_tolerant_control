@@ -197,7 +197,7 @@ namespace ftc {//主函数在哪里？***
   void NDICtrl::stateUpdateCallback(const quad_msgs::QuadStateEstimate::ConstPtr& msg)  {       
      
       if(estimation_received_ == false) //调用stateupdatecallback函数后estimation为true
-        estimation_received_ = true;
+        estimation_received_ = true;  
       
       state_.timestamp = msg->header.stamp;//更新时间戳
 
@@ -205,9 +205,13 @@ namespace ftc {//主函数在哪里？***
       state_.position.y()     =   msg->position.y;     
       state_.position.z()     =   msg->position.z;     
 
+      state_.velocity_old.x()     =   state_.velocity.x();     //记录线速度
+      state_.velocity_old.y()     =   state_.velocity.y(); 
+      state_.velocity_old.z()     =   state_.velocity.z();      
+
       state_.velocity.x()     =   msg->velocity.x;     //更新线速度
       state_.velocity.y()     =   msg->velocity.y; 
-      state_.velocity.z()     =   msg->velocity.z;         
+      state_.velocity.z()     =   msg->velocity.z;   
 
       pos_design_current_position_.x() = msg->position.x;//与vio有关
       pos_design_current_position_.y() = msg->position.y;     
@@ -299,10 +303,16 @@ namespace ftc {//主函数在哪里？***
     Eigen::DiagonalMatrix<double,3> Kp_pos;//定义三个对角矩阵，初始化位置环Eigen::Vector3d n_des_b = state_.orientation.inverse() * n_des_i;kp、kd、ki
     Eigen::DiagonalMatrix<double,3> Kd_pos;
     Eigen::DiagonalMatrix<double,3> Ki_pos;
+    Eigen::DiagonalMatrix<double,3> Kp_vel;//SYSU_CODE
+    Eigen::DiagonalMatrix<double,3> Kd_vel;
+    Eigen::DiagonalMatrix<double,3> Ki_vel;
     if (!failure_mode_) {
       Kp_pos.diagonal() << Kp_pos_vec_[0], Kp_pos_vec_[1], Kp_pos_vec_[2];//如果是正常情况则对角线上是正常情况pid参数
       Kd_pos.diagonal() << Kd_pos_vec_[0], Kd_pos_vec_[1], Kd_pos_vec_[2];
       Ki_pos.diagonal() << Ki_pos_vec_[0], Ki_pos_vec_[1], Ki_pos_vec_[2];
+      Kp_vel.diagonal() << Kp_vel_vec_[0], Kp_vel_vec_[1], Kp_vel_vec_[2];//如果是正常情况则对角线上是正常情况pid参数 sysu_code
+      Kd_vel.diagonal() << Kd_vel_vec_[0], Kd_vel_vec_[1], Kd_vel_vec_[2];
+      Ki_vel.diagonal() << Ki_vel_vec_[0], Ki_vel_vec_[1], Ki_vel_vec_[2];
     } else {
       Kp_pos.diagonal() << Kp_pos_vec_fail_[0], Kp_pos_vec_fail_[1], Kp_pos_vec_fail_[2];//容错工况pid参数
       Kd_pos.diagonal() << Kd_pos_vec_fail_[0], Kd_pos_vec_fail_[1], Kd_pos_vec_fail_[2];
@@ -310,7 +320,7 @@ namespace ftc {//主函数在哪里？***
     }
 
     // set used position and velocity for control.
-    Eigen::Vector3d position_used, velocity_used;
+    Eigen::Vector3d position_used, velocity_used, velocity_oldused;
     if (!filter_pos_.initialized() || !filter_vel_.initialized()) {
       //@ hack: These are notch filter parameters for 100 Hz control frequency.
       Eigen::VectorXd num_notch = (Eigen::Matrix<double,5,1>() 
@@ -329,6 +339,7 @@ namespace ftc {//主函数在哪里？***
     if (!failure_mode_) {
       position_used = state_.position;//如果是正常模式，则更新位置和速度
       velocity_used = state_.velocity;
+      velocity_oldused = state_.velocity_old;
     }
     else {
       if (use_notch_filter_){//容错模式下开启filter
@@ -347,15 +358,28 @@ namespace ftc {//主函数在哪里？***
     if(!referenceUpdated_)
       time = 0.0;
 
-    ROS_INFO("pos_design_: %f %f %f", pos_design_(0), pos_design_(1), pos_design_(2));
-
     if (!sigmoid_traj_ || (time<0)) {
+      // ROS_INFO("%f",time);
       Eigen::Vector3d pos_err = (pos_design_ - position_used);
+      Eigen::Vector3d v_des_ = Kp_pos * pos_err;//SYSU_CODE
+      Eigen::Vector3d vel_err = (v_des_ - velocity_used); //SYSU_CODE
+      Eigen::Vector3d acc_used = (velocity_used - velocity_oldused) * ctrl_rate_;//SYSU_CODE
       integrator3(pos_err, pos_err_int_, 1.0/ctrl_rate_, max_pos_err_int_);
-      a_des_ = Kp_pos * pos_err - Kd_pos * velocity_used + Ki_pos * pos_err_int_ - g_vect_;
+      integrator3(vel_err, vel_err_int_, 1.0/ctrl_rate_, max_vel_err_int_);//SYSU_CODE 限幅暂时用pos
+      // a_des_ = Kp_pos * pos_err - Kd_pos * velocity_used + Ki_pos * pos_err_int_ - g_vect_;
+      a_des_ = Kp_vel * vel_err - Kd_vel * acc_used + Ki_vel * vel_err_int_ - g_vect_;
+      ROS_INFO("pos_err: %f %f %f", pos_err(0), pos_err(1), pos_err(2));
+      ROS_INFO("v_des_: %f %f %f", v_des_(0), v_des_(1), v_des_(2));
+      ROS_INFO("velocity_used: %f %f %f", velocity_used(0), velocity_used(1), velocity_used(2));
+      ROS_INFO("vel_err: %f %f %f", vel_err(0), vel_err(1), vel_err(2));
+      ROS_INFO("acc_used: %f %f %f", acc_used(0), acc_used(1), acc_used(2));
+      ROS_INFO("vel_err_int_: %f %f %f", vel_err_int_(0), vel_err_int_(1), vel_err_int_(2));
+      ROS_INFO("a_des_: %f %f %f", a_des_(0), a_des_(1), a_des_(2));
+      ROS_INFO("--------------------------------------------");
     }
 
     else {
+      // ROS_INFO("%f",time);
       Eigen::Vector3d pos_des, vel_des, acc_des;
       
       sigmoidTraj(pos_design_(0), position_at_update_(0), pos_des(0), vel_des(0), acc_des(0), time);
@@ -365,22 +389,24 @@ namespace ftc {//主函数在哪里？***
       vel_des(2) = 0.0;
       acc_des(2) = 0.0;
 
-      Eigen::Vector3d pos_err = (pos_des - position_used);      
+      Eigen::Vector3d pos_err = (pos_des - position_used);   
       integrator3(pos_err, pos_err_int_, 1.0/ctrl_rate_, max_pos_err_int_);
-
-      a_des_ = acc_des + Kd_pos * (vel_des - velocity_used) 
-                + Kp_pos * pos_err  + Ki_pos * pos_err_int_ - g_vect_;  
-    // ROS_INFO("pos_err: %f %f %f", pos_err(0), pos_err(1), pos_err(2));
-    // ROS_INFO("vel_err: %f %f %f", vel_des(0) - velocity_used(0), vel_des(1) - velocity_used(1), vel_des(2) - velocity_used(2));
-    // ROS_INFO("pos_err_int_: %f %f %f", pos_err_int_(0), pos_err_int_(1), pos_err_int_(2));
-    // ROS_INFO("a_des_: %f %f %f", a_des_(0), a_des_(1), a_des_(2));
-    // ROS_INFO("----------------------------------");
+      Eigen::Vector3d acc_used = (velocity_used - velocity_oldused) * ctrl_rate_;//SYSU_CODE
+      // a_des_ = acc_des + Kd_pos * (vel_des - velocity_used) 
+      //           + Kp_pos * pos_err  + Ki_pos * pos_err_int_ - g_vect_;      
+      v_des_ = Kp_pos * pos_err;//SYSU_CODE
+      Eigen::Vector3d vel_err = (v_des_ - velocity_used); //SYSU_CODE 
+      integrator3(vel_err, vel_err_int_, 1.0/ctrl_rate_, max_vel_err_int_);//SYSU_CODE
+      a_des_ = Kp_vel * vel_err - Kd_vel * acc_used + Ki_vel * vel_err_int_ - g_vect_;
+      ROS_INFO("v_des_: %f %f %f", v_des_(0), v_des_(1), v_des_(2));
+      ROS_INFO("a_des_: %f %f %f", a_des_(0), a_des_(1), a_des_(2));
+      ROS_INFO("acc_used: %f %f %f", acc_used(0), acc_used(1), acc_used(2));
     }
-
 
     // acceleration command hedging
     if(use_vio_) { 
       if (!failure_mode_) {
+        // ROS_INFO("yes");
         limit(a_des_(0), -max_horz_acc_, max_horz_acc_);
         limit(a_des_(1), -max_horz_acc_, max_horz_acc_);
         limit(a_des_(2), g_ - max_vert_acc_, g_ + max_vert_acc_);
@@ -515,6 +541,7 @@ namespace ftc {//主函数在哪里？***
     check &= pnh_.param("maxHorzAccFail", max_horz_acc_fail_, 2.0);    
     check &= pnh_.param("maxNbErrInt", max_nb_err_int_, 30.0);
     check &= pnh_.param("maxPosErrInt", max_pos_err_int_, 30.0);
+    check &= pnh_.param("maxVelErrInt", max_vel_err_int_, 30.0);//SYSU_CODE 
     check &= pnh_.param("mot_coeff1", coeff1_, 0.000008492875480);
     check &= pnh_.param("mot_coeff2", coeff2_, -0.002777454295627);
     check &= pnh_.param("mot_coeff3", coeff3_, 0.108400169428593);
@@ -530,6 +557,9 @@ namespace ftc {//主函数在哪里？***
     check &= pnh_.getParam("kp_pos", Kp_pos_vec_);
     check &= pnh_.getParam("kd_pos", Kd_pos_vec_);
     check &= pnh_.getParam("ki_pos", Ki_pos_vec_);
+    check &= pnh_.getParam("kp_vel", Kp_vel_vec_);//sysu_code
+    check &= pnh_.getParam("kd_vel", Kd_vel_vec_);
+    check &= pnh_.getParam("ki_vel", Ki_vel_vec_);
     check &= pnh_.getParam("k_att", K_att_);
     check &= pnh_.getParam("k_yaw", K_yaw_);
     check &= pnh_.getParam("kp_pos_fail", Kp_pos_vec_fail_);
