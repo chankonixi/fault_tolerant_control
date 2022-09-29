@@ -1,0 +1,61 @@
+In file included from [01m[K/opt/ros/melodic/include/ros/ros.h:40:0[m[K,
+                 from [01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/include/rotors_interface/rotors_interface.hpp:18[m[K,
+                 from [01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:17[m[K:
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:[m[K In member function ‘[01m[Kvoid rotors_interface::RotorSInterface::looptrajectory()[m[K’:
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:223:59:[m[K [01;31m[Kerror: [m[Kno match for call to ‘[01m[K(geometry_msgs::Point {aka geometry_msgs::Point_<std::allocator<void> >}) (int)[m[K’
+         ROS_INFO("pos_design_: %f %f %f",pos_design_msg_(0[01;31m[K)[m[K,pos_design_msg_(1),pos_design_msg_(2));
+                                                           [01;31m[K^[m[K
+[01m[K/opt/ros/melodic/include/ros/console.h:348:165:[m[K [01;36m[Knote: [m[Kin definition of macro ‘[01m[KROSCONSOLE_PRINT_AT_LOCATION_WITH_FILTER[m[K’
+     ::ros::console::print(filter, __rosconsole_define_location__loc.logger_, __rosconsole_define_location__loc.level_, __FILE__, __LINE__, __ROSCONSOLE_FUNCTION__, [01;36m[K__VA_ARGS__[m[K)
+                                                                                                                                                                     [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/opt/ros/melodic/include/ros/console.h:387:7:[m[K [01;36m[Knote: [m[Kin expansion of macro ‘[01m[KROSCONSOLE_PRINT_AT_LOCATION[m[K’
+       [01;36m[KROSCONSOLE_PRINT_AT_LOCATION[m[K(__VA_ARGS__); \
+       [01;36m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+[01m[K/opt/ros/melodic/include/ros/console.h:572:35:[m[K [01;36m[Knote: [m[Kin expansion of macro ‘[01m[KROS_LOG_COND[m[K’
+ #define ROS_LOG(level, name, ...) [01;36m[KROS_LOG_COND[m[K(true, level, name, __VA_ARGS__)
+                                   [01;36m[K^~~~~~~~~~~~[m[K
+[01m[K/opt/ros/melodic/include/rosconsole/macros_generated.h:110:23:[m[K [01;36m[Knote: [m[Kin expansion of macro ‘[01m[KROS_LOG[m[K’
+ #define ROS_INFO(...) [01;36m[KROS_LOG[m[K(::ros::console::levels::Info, ROSCONSOLE_DEFAULT_NAME, __VA_ARGS__)
+                       [01;36m[K^~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:223:9:[m[K [01;36m[Knote: [m[Kin expansion of macro ‘[01m[KROS_INFO[m[K’
+         [01;36m[KR[m[KOS_INFO("pos_design_: %f %f %f",pos_design_msg_(0),pos_design_msg_(1),pos_design_msg_(2));
+         [01;36m[K^[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:223:78:[m[K [01;31m[Kerror: [m[Kno match for call to ‘[01m[K(geometry_msgs::Point {aka geometry_msgs::Point_<std::allocator<void> >}) (int)[m[K’
+         ROS_INFO("pos_design_: %f %f %f",pos_design_msg_(0),pos_design_msg_(1[01;31m[K)[m[K,pos_design_msg_(2));
+                                                                              [01;31m[K^[m[K
+[01m[K/opt/ros/melodic/include/ros/console.h:348:165:[m[K [01;36m[Knote: [m[Kin definition of macro ‘[01m[KROSCONSOLE_PRINT_AT_LOCATION_WITH_FILTER[m[K’
+     ::ros::console::print(filter, __rosconsole_define_location__loc.logger_, __rosconsole_define_location__loc.level_, __FILE__, __LINE__, __ROSCONSOLE_FUNCTION__, [01;36m[K__VA_ARGS__[m[K)
+                                                                                                                                                                     [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/opt/ros/melodic/include/ros/console.h:387:7:[m[K [01;36m[Knote: [m[Kin expansion of macro ‘[01m[KROSCONSOLE_PRINT_AT_LOCATION[m[K’
+       [01;36m[KROSCONSOLE_PRINT_AT_LOCATION[m[K(__VA_ARGS__); \
+       [01;36m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+[01m[K/opt/ros/melodic/include/ros/console.h:572:35:[m[K [01;36m[Knote: [m[Kin expansion of macro ‘[01m[KROS_LOG_COND[m[K’
+ #define ROS_LOG(level, name, ...) [01;36m[KROS_LOG_COND[m[K(true, level, name, __VA_ARGS__)
+                                   [01;36m[K^~~~~~~~~~~~[m[K
+[01m[K/opt/ros/melodic/include/rosconsole/macros_generated.h:110:23:[m[K [01;36m[Knote: [m[Kin expansion of macro ‘[01m[KROS_LOG[m[K’
+ #define ROS_INFO(...) [01;36m[KROS_LOG[m[K(::ros::console::levels::Info, ROSCONSOLE_DEFAULT_NAME, __VA_ARGS__)
+                       [01;36m[K^~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:223:9:[m[K [01;36m[Knote: [m[Kin expansion of macro ‘[01m[KROS_INFO[m[K’
+         [01;36m[KR[m[KOS_INFO("pos_design_: %f %f %f",pos_design_msg_(0),pos_design_msg_(1),pos_design_msg_(2));
+         [01;36m[K^[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:223:97:[m[K [01;31m[Kerror: [m[Kno match for call to ‘[01m[K(geometry_msgs::Point {aka geometry_msgs::Point_<std::allocator<void> >}) (int)[m[K’
+         ROS_INFO("pos_design_: %f %f %f",pos_design_msg_(0),pos_design_msg_(1),pos_design_msg_(2[01;31m[K)[m[K);
+                                                                                                 [01;31m[K^[m[K
+[01m[K/opt/ros/melodic/include/ros/console.h:348:165:[m[K [01;36m[Knote: [m[Kin definition of macro ‘[01m[KROSCONSOLE_PRINT_AT_LOCATION_WITH_FILTER[m[K’
+     ::ros::console::print(filter, __rosconsole_define_location__loc.logger_, __rosconsole_define_location__loc.level_, __FILE__, __LINE__, __ROSCONSOLE_FUNCTION__, [01;36m[K__VA_ARGS__[m[K)
+                                                                                                                                                                     [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/opt/ros/melodic/include/ros/console.h:387:7:[m[K [01;36m[Knote: [m[Kin expansion of macro ‘[01m[KROSCONSOLE_PRINT_AT_LOCATION[m[K’
+       [01;36m[KROSCONSOLE_PRINT_AT_LOCATION[m[K(__VA_ARGS__); \
+       [01;36m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+[01m[K/opt/ros/melodic/include/ros/console.h:572:35:[m[K [01;36m[Knote: [m[Kin expansion of macro ‘[01m[KROS_LOG_COND[m[K’
+ #define ROS_LOG(level, name, ...) [01;36m[KROS_LOG_COND[m[K(true, level, name, __VA_ARGS__)
+                                   [01;36m[K^~~~~~~~~~~~[m[K
+[01m[K/opt/ros/melodic/include/rosconsole/macros_generated.h:110:23:[m[K [01;36m[Knote: [m[Kin expansion of macro ‘[01m[KROS_LOG[m[K’
+ #define ROS_INFO(...) [01;36m[KROS_LOG[m[K(::ros::console::levels::Info, ROSCONSOLE_DEFAULT_NAME, __VA_ARGS__)
+                       [01;36m[K^~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:223:9:[m[K [01;36m[Knote: [m[Kin expansion of macro ‘[01m[KROS_INFO[m[K’
+         [01;36m[KR[m[KOS_INFO("pos_design_: %f %f %f",pos_design_msg_(0),pos_design_msg_(1),pos_design_msg_(2));
+         [01;36m[K^[m[K
+make[2]: *** [CMakeFiles/rotors_interface.dir/src/rotors_interface.cpp.o] Error 1
+make[1]: *** [CMakeFiles/rotors_interface.dir/all] Error 2
+make: *** [all] Error 2

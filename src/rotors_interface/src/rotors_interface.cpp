@@ -31,13 +31,17 @@ RotorSInterface::RotorSInterface
       ROS_ERROR("[%s] Could not load parameters. Using default Params!",
         pnh_.getNamespace().c_str());
     }
+
+    armed_out_.data = false;
+    control_timer_ = nh_.createTimer(ros::Duration(1.0/250), &RotorSInterface::controlUpdateCallback, this);//SYSU_CODE  
 /*发布话题：发布给容错控制器的state_set；发布给gazebo的command/motor_speed*/
 
     rotors_desired_motor_speed_pub_ = nh_.advertise<mav_msgs::Actuators>(
         "command/motor_speed", 1);    
     state_est_pub_ = nh_.advertise<quad_msgs::QuadStateEstimate>(
         "state_est", 1);
-    rotor_control_pub_ = nh_.advertise<mavros_msgs::RotorControl>("rotor_control", 1000);     
+    rotor_control_pub_ = nh_.advertise<mavros_msgs::RotorControl>("rotor_control", 1000);   
+    reference_pub_ = nh_.advertise<geometry_msgs::Point>("reference_pos",1);//SYSU_CODE   
 
 /*订阅话题：订阅gazebo中的odometry；订阅容错控制器中control_command
 (问题：control_command是否为电机PWM控制信号，利用motorcommandcallback转化成电机转速并利用motor_speed话题发布出去，如果是转化函数是多少)*/
@@ -51,6 +55,8 @@ RotorSInterface::RotorSInterface
 
     inner_design_sub_ = nh_.subscribe(
         "inner_design", 1, &RotorSInterface::ftcInnerdesignCallback, this);
+    start_rotors_sub_ = nh_.subscribe(
+        "start_rotors", 1, &RotorSInterface::startRotorsCallback, this);
     };
 
 
@@ -165,7 +171,7 @@ rotor_speed = mot_throttle*mot_throttle*系数1 + mot_throttle*系数2 + 系数3
 
 /*SYSU Code begining*/
     for (int i=0; i<4;i++) {
-      rotor_control_msg_.mot_throttle[i] = msg->mot_throttle[i];
+        rotor_control_msg_.mot_throttle[i] = msg->mot_throttle[i];
     } 
     rotor_control_pub_.publish(rotor_control_msg_);
 /*SYSU Code ending*/
@@ -196,4 +202,33 @@ void RotorSInterface::ftcInnerdesignCallback(const quad_msgs::QuadStateEstimate:
     // ROS_INFO("%f %f %f", msg_inn.bodyrates.x, msg_inn.bodyrates.y, msg_inn.bodyrates.z);
 }
 /*SYSUCODE*/
+
+void RotorSInterface::startRotorsCallback(const std_msgs::Empty::ConstPtr& msg){ 
+    armed_out_.data = true; 
+    time_traj_received_ = ros::Time::now().toSec();
+    ROS_INFO("estimation do not received %f", time_traj_received_);
+}
+
+void RotorSInterface::controlUpdateCallback(const ros::TimerEvent&){
+    looptrajectory();
+
+    return;
+}
+void RotorSInterface::looptrajectory()
+{
+    if (armed_out_.data) 
+    {
+        double time = ros::Time::now().toSec() - time_traj_received_;
+        ROS_INFO("time is %f", time);
+        pos_design_msg_.x = 0.0;
+        pos_design_msg_.y = 0.0;
+        pos_design_msg_.z = 1/(1+exp(-time/5));
+        reference_pub_.publish(pos_design_msg_);
+        ROS_INFO("pos_design_: %f %f %f",pos_design_msg_.x,pos_design_msg_.y,pos_design_msg_.z);
+    }
+    else 
+    {
+        return;
+    }
+}
 }//namespace rotors_interface

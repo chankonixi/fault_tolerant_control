@@ -1,0 +1,49 @@
+In file included from [01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface_node.cpp:17:0[m[K:
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/include/rotors_interface/rotors_interface.hpp:68:13:[m[K [01;31m[Kerror: [m[K‘[01m[KEigen[m[K’ does not name a type
+             [01;31m[KEigen[m[K::Vector3d pos_design_msg_;
+             [01;31m[K^~~~~[m[K
+make[2]: *** [CMakeFiles/rotors_interface.dir/src/rotors_interface_node.cpp.o] Error 1
+make[2]: *** 正在等待未完成的任务....
+In file included from [01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:17:0[m[K:
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/include/rotors_interface/rotors_interface.hpp:68:13:[m[K [01;31m[Kerror: [m[K‘[01m[KEigen[m[K’ does not name a type
+             [01;31m[KEigen[m[K::Vector3d pos_design_msg_;
+             [01;31m[K^~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:[m[K In constructor ‘[01m[Krotors_interface::RotorSInterface::RotorSInterface(const ros::NodeHandle&, const ros::NodeHandle&)[m[K’:
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:36:80:[m[K [01;31m[Kerror: [m[K‘[01m[KcontrolUpdateCallback[m[K’ is not a member of ‘[01m[Krotors_interface::RotorSInterface[m[K’
+     control_timer_ = nh_.createTimer(ros::Duration(1.0/250), &RotorSInterface::[01;31m[KcontrolUpdateCallback[m[K, this);//SYSU_CODE
+                                                                                [01;31m[K^~~~~~~~~~~~~~~~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:44:77:[m[K [01;31m[Kerror: [m[Kno matching function for call to ‘[01m[Kros::NodeHandle::advertise<geometry_msgs::Point>(const char [14], int) const[m[K’
+     reference_pub_ = nh.advertise<geometry_msgs::Point>("reference_pos",1000[01;31m[K)[m[K;//SYSU_CODE
+                                                                             [01;31m[K^[m[K
+In file included from [01m[K/opt/ros/melodic/include/ros/ros.h:45:0[m[K,
+                 from [01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/include/rotors_interface/rotors_interface.hpp:18[m[K,
+                 from [01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:17[m[K:
+[01m[K/opt/ros/melodic/include/ros/node_handle.h:249:15:[m[K [01;36m[Knote: [m[Kcandidate: ros::Publisher ros::NodeHandle::advertise(const string&, uint32_t, bool) [with M = geometry_msgs::Point_<std::allocator<void> >; std::__cxx11::string = std::__cxx11::basic_string<char>; uint32_t = unsigned int] <near match>
+     Publisher [01;36m[Kadvertise[m[K(const std::string& topic, uint32_t queue_size, bool latch = false)
+               [01;36m[K^~~~~~~~~[m[K
+[01m[K/opt/ros/melodic/include/ros/node_handle.h:249:15:[m[K [01;36m[Knote: [m[K  passing ‘[01m[Kconst ros::NodeHandle*[m[K’ as ‘[01m[Kthis[m[K’ argument discards qualifiers
+In file included from [01m[K/opt/ros/melodic/include/ros/ros.h:45:0[m[K,
+                 from [01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/include/rotors_interface/rotors_interface.hpp:18[m[K,
+                 from [01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:17[m[K:
+[01m[K/opt/ros/melodic/include/ros/node_handle.h:315:13:[m[K [01;36m[Knote: [m[Kcandidate: template<class M> ros::Publisher ros::NodeHandle::advertise(const string&, uint32_t, const SubscriberStatusCallback&, const SubscriberStatusCallback&, const VoidConstPtr&, bool)
+   Publisher [01;36m[Kadvertise[m[K(const std::string& topic, uint32_t queue_size,
+             [01;36m[K^~~~~~~~~[m[K
+[01m[K/opt/ros/melodic/include/ros/node_handle.h:315:13:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:44:77:[m[K [01;36m[Knote: [m[K  candidate expects 6 arguments, 2 provided
+     reference_pub_ = nh.advertise<geometry_msgs::Point>("reference_pos",1000[01;36m[K)[m[K;//SYSU_CODE
+                                                                             [01;36m[K^[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:[m[K At global scope:
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:209:67:[m[K [01;31m[Kerror: [m[Kno ‘[01m[Kvoid rotors_interface::RotorSInterface::controlUpdateCallback(const ros::TimerEvent&)[m[K’ member function declared in class ‘[01m[Krotors_interface::RotorSInterface[m[K’
+ void RotorSInterface::controlUpdateCallback(const ros::TimerEvent&[01;31m[K)[m[K{
+                                                                   [01;31m[K^[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:[m[K In member function ‘[01m[Kvoid rotors_interface::RotorSInterface::looptrajectory()[m[K’:
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:219:9:[m[K [01;31m[Kerror: [m[K‘[01m[Kpos_design_msg_[m[K’ was not declared in this scope
+         [01;31m[Kpos_design_msg_[m[K(0) = 0;
+         [01;31m[K^~~~~~~~~~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:219:9:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Kinner_design_sub_[m[K’
+         [01;36m[Kpos_design_msg_[m[K(0) = 0;
+         [01;36m[K^~~~~~~~~~~~~~~[m[K
+         [32m[Kinner_design_sub_[m[K
+make[2]: *** [CMakeFiles/rotors_interface.dir/src/rotors_interface.cpp.o] Error 1
+make[1]: *** [CMakeFiles/rotors_interface.dir/all] Error 2
+make: *** [all] Error 2

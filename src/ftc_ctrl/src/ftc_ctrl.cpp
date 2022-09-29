@@ -347,7 +347,7 @@ namespace ftc {//主函数在哪里？***
     if(!referenceUpdated_)
       time = 0.0;
 
-    ROS_INFO("pos_design_: %f %f %f", pos_design_(0), pos_design_(1), pos_design_(2));
+    // ROS_INFO("pos_design_: %f %f %f", pos_design_(0), pos_design_(1), pos_design_(2));
 
     if (!sigmoid_traj_ || (time<0)) {
       Eigen::Vector3d pos_err = (pos_design_ - position_used);

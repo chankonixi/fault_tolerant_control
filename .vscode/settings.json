@@ -6,6 +6,10 @@
   "C_Cpp.errorSquiggles": "Disabled",
   "files.associations": {
     "string": "cpp",
-    "core": "cpp"
+    "core": "cpp",
+    "array": "cpp",
+    "string_view": "cpp",
+    "cmath": "cpp",
+    "complex": "cpp"
   }
 }

@@ -22,6 +22,11 @@
 #include "quad_msgs/ControlCommand.h"
 #include <mavros_msgs/RotorControl.h>
 
+#include "std_msgs/Empty.h"
+#include "std_msgs/String.h"
+#include "std_msgs/Bool.h"
+#include <Eigen/Eigen>
+#include "geometry_msgs/Point.h"
 
 
 
@@ -43,9 +48,6 @@ namespace rotors_interface
             ros::Subscriber rotors_odometry_sub_;
             ros::Subscriber rotors_gazebo_odometry_sub_;
             ros::Subscriber motor_command_sub_;
-
-            ros::Subscriber inner_design_sub_;//SYSUCODE
-            void ftcInnerdesignCallback(const quad_msgs::QuadStateEstimate::ConstPtr& msg);//SYSUCODE
             
             double coeff1_, coeff2_, coeff3_;
             double rotor_thrust_coeff_;
@@ -55,6 +57,18 @@ namespace rotors_interface
             void rotorsgazeboOdometryCallback(const nav_msgs::Odometry::ConstPtr& msg);
             void ftcMotorCommandCallback(const quad_msgs::ControlCommand::ConstPtr& msg);
 
+            ros::Subscriber inner_design_sub_;//SYSUCODE
+            ros::Publisher  reference_pub_;//SYSUCODE
+            void ftcInnerdesignCallback(const quad_msgs::QuadStateEstimate::ConstPtr& msg);//SYSUCODE
+            ros::Timer control_timer_;
+            void looptrajectory();
+            bool trajectory_received_=false;
+            std_msgs::Bool armed_out_;
+            void startRotorsCallback (const std_msgs::Empty::ConstPtr& msg);
+            double time_traj_received_;
+            geometry_msgs::Point pos_design_msg_;
+            void controlUpdateCallback(const ros::TimerEvent&);
+            ros::Subscriber start_rotors_sub_;
     };
 
 } // namespace rotors_interface
