@@ -367,15 +367,15 @@ namespace ftc {//主函数在哪里？***
       integrator3(pos_err, pos_err_int_, 1.0/ctrl_rate_, max_pos_err_int_);
       integrator3(vel_err, vel_err_int_, 1.0/ctrl_rate_, max_vel_err_int_);//SYSU_CODE 限幅暂时用pos
       // a_des_ = Kp_pos * pos_err - Kd_pos * velocity_used + Ki_pos * pos_err_int_ - g_vect_;
-      a_des_ = Kp_vel * vel_err - Kd_vel * acc_used + Ki_vel * vel_err_int_ - g_vect_;
-      ROS_INFO("pos_err: %f %f %f", pos_err(0), pos_err(1), pos_err(2));
-      ROS_INFO("v_des_: %f %f %f", v_des_(0), v_des_(1), v_des_(2));
-      ROS_INFO("velocity_used: %f %f %f", velocity_used(0), velocity_used(1), velocity_used(2));
-      ROS_INFO("vel_err: %f %f %f", vel_err(0), vel_err(1), vel_err(2));
-      ROS_INFO("acc_used: %f %f %f", acc_used(0), acc_used(1), acc_used(2));
-      ROS_INFO("vel_err_int_: %f %f %f", vel_err_int_(0), vel_err_int_(1), vel_err_int_(2));
-      ROS_INFO("a_des_: %f %f %f", a_des_(0), a_des_(1), a_des_(2));
-      ROS_INFO("--------------------------------------------");
+      a_des_ = Kp_vel * vel_err - Kd_vel * acc_used + Ki_vel * pos_err - g_vect_;
+      // ROS_INFO("pos_err: %f %f %f", pos_err(0), pos_err(1), pos_err(2));
+      // ROS_INFO("v_des_: %f %f %f", v_des_(0), v_des_(1), v_des_(2));
+      // ROS_INFO("velocity_used: %f %f %f", velocity_used(0), velocity_used(1), velocity_used(2));
+      // ROS_INFO("vel_err: %f %f %f", vel_err(0), vel_err(1), vel_err(2));
+      // ROS_INFO("acc_used: %f %f %f", acc_used(0), acc_used(1), acc_used(2));
+      // ROS_INFO("vel_err_int_: %f %f %f", vel_err_int_(0), vel_err_int_(1), vel_err_int_(2));
+      // ROS_INFO("a_des_: %f %f %f", a_des_(0), a_des_(1), a_des_(2));
+      // ROS_INFO("--------------------------------------------");
     }
 
     else {
@@ -397,10 +397,10 @@ namespace ftc {//主函数在哪里？***
       v_des_ = Kp_pos * pos_err;//SYSU_CODE
       Eigen::Vector3d vel_err = (v_des_ - velocity_used); //SYSU_CODE 
       integrator3(vel_err, vel_err_int_, 1.0/ctrl_rate_, max_vel_err_int_);//SYSU_CODE
-      a_des_ = Kp_vel * vel_err - Kd_vel * acc_used + Ki_vel * vel_err_int_ - g_vect_;
-      ROS_INFO("v_des_: %f %f %f", v_des_(0), v_des_(1), v_des_(2));
-      ROS_INFO("a_des_: %f %f %f", a_des_(0), a_des_(1), a_des_(2));
-      ROS_INFO("acc_used: %f %f %f", acc_used(0), acc_used(1), acc_used(2));
+      a_des_ = Kp_vel * vel_err - Kd_vel * acc_used + Ki_vel * pos_err - g_vect_;
+      // ROS_INFO("v_des_: %f %f %f", v_des_(0), v_des_(1), v_des_(2));
+      // ROS_INFO("a_des_: %f %f %f", a_des_(0), a_des_(1), a_des_(2));
+      // ROS_INFO("acc_used: %f %f %f", acc_used(0), acc_used(1), acc_used(2));
     }
 
     // acceleration command hedging
