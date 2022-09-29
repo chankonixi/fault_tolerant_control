@@ -100,6 +100,7 @@ namespace ftc
     double n_primary_axis_;  
     double max_vert_acc_;
     double max_pos_err_int_;
+    double max_vel_err_int_;
     double max_nb_err_int_;
     double max_horz_acc_;
     double max_horz_acc_fail_;
@@ -108,6 +109,7 @@ namespace ftc
     Eigen::Vector3d n_b_;
     Eigen::Vector3d nb_err_int_;
     Eigen::Vector3d pos_err_int_;   
+    Eigen::Vector3d vel_err_int_; 
     Eigen::Vector3d a_des_;
     Eigen::Vector3d v_des_;
     Eigen::Matrix4d G_inv_;
