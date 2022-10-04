@@ -172,9 +172,17 @@ namespace ftc
     void integrator3(const Eigen::Vector3d& input, Eigen::Vector3d& output, const double dt, const double max);
     void integrator(const double &input, double& output, const double dt, const double max);
     void sigmoidTraj(const double pos_end, const double pos_begin,
-                           double& pos_des, double& vel_des, double& acc_des, double time);
+                          double& pos_des, double& vel_des, double& acc_des, double time);
 
-
+    // Eigen::Vector3d initial;
+    // void RK4(Eigen::Vector3d(*rungekutta_f)(double time, Eigen::Vector3d runge_x, Eigen::Vector3d runge_y),
+    // Eigen::Vector3d(*rungekutta_g)(double time, Eigen::Vector3d runge_x, Eigen::Vector3d runge_y, Eigen::Vector3d(*acc_use)(double time)), 
+    //                               double initial[3], double resu[3], double h);
+    // Eigen::Vector3d rungekutta_f(double time, Eigen::Vector3d runge_x, Eigen::Vector3d runge_y);
+    // Eigen::Vector3d rungekutta_g(double time, Eigen::Vector3d runge_x, Eigen::Vector3d runge_y, 
+    //                               Eigen::Vector3d(*acc_use)(double t));
+    //有问题
+    
   };
 
 } // namespace ftc
