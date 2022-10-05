@@ -1,0 +1,100 @@
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:455:40:[m[K [01;31m[Kerror: [m[Kstray ‘[01m[K\357[m[K’ in program
+     double kph_the_, kdh_the_, kih_the_[01;31m[K�[m[K��kph_phi_, kdh_phi_, kih_phi_;
+                                        [01;31m[K^[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:455:41:[m[K [01;31m[Kerror: [m[Kstray ‘[01m[K\274[m[K’ in program
+     double kph_the_, kdh_the_, kih_the_�[01;31m[K�[m[K�kph_phi_, kdh_phi_, kih_phi_;
+                                         [01;31m[K^[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:455:42:[m[K [01;31m[Kerror: [m[Kstray ‘[01m[K\214[m[K’ in program
+     double kph_the_, kdh_the_, kih_the_�[01;31m[K�[m[Kkph_phi_, kdh_phi_, kih_phi_;
+                                          [01;31m[K^[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:[m[K In member function ‘[01m[Kvoid ftc::NDICtrl::controller_innerloop()[m[K’:
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:455:43:[m[K [01;31m[Kerror: [m[Kexpected initializer before ‘[01m[Kkph_phi_[m[K’
+     double kph_the_, kdh_the_, kih_the_，[01;31m[Kkph_phi_[m[K, kdh_phi_, kih_phi_;
+                                           [01;31m[K^~~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:459:7:[m[K [01;31m[Kerror: [m[K‘[01m[Kkih_the_[m[K’ was not declared in this scope
+       [01;31m[Kkih_the_[m[K = K_att_the_[2];
+       [01;31m[K^~~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:459:7:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Kkdh_the_[m[K’
+       [01;36m[Kkih_the_[m[K = K_att_the_[2];
+       [01;36m[K^~~~~~~~[m[K
+       [32m[Kkdh_the_[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:460:7:[m[K [01;31m[Kerror: [m[K‘[01m[Kkph_phi_[m[K’ was not declared in this scope
+       [01;31m[Kkph_phi_[m[K = K_att_phi_[0];
+       [01;31m[K^~~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:460:7:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Kkph_the_[m[K’
+       [01;36m[Kkph_phi_[m[K = K_att_phi_[0];
+       [01;36m[K^~~~~~~~[m[K
+       [32m[Kkph_the_[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:461:7:[m[K [01;31m[Kerror: [m[K‘[01m[Kkdh_phi_[m[K’ was not declared in this scope
+       [01;31m[Kkdh_phi_[m[K = K_att_phi_[1];
+       [01;31m[K^~~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:461:7:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Kkdh_the_[m[K’
+       [01;36m[Kkdh_phi_[m[K = K_att_phi_[1];
+       [01;36m[K^~~~~~~~[m[K
+       [32m[Kkdh_the_[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:462:7:[m[K [01;31m[Kerror: [m[K‘[01m[Kkih_phi_[m[K’ was not declared in this scope
+       [01;31m[Kkih_phi_[m[K = K_att_phi_[2];
+       [01;31m[K^~~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:462:7:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Kkdh_the_[m[K’
+       [01;36m[Kkih_phi_[m[K = K_att_phi_[2];
+       [01;36m[K^~~~~~~~[m[K
+       [32m[Kkdh_the_[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:467:7:[m[K [01;31m[Kerror: [m[K‘[01m[Kkih_the_[m[K’ was not declared in this scope
+       [01;31m[Kkih_the_[m[K = K_att_fail_[2];
+       [01;31m[K^~~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:467:7:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Kkdh_the_[m[K’
+       [01;36m[Kkih_the_[m[K = K_att_fail_[2];
+       [01;36m[K^~~~~~~~[m[K
+       [32m[Kkdh_the_[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:468:7:[m[K [01;31m[Kerror: [m[K‘[01m[Kkph_phi_[m[K’ was not declared in this scope
+       [01;31m[Kkph_phi_[m[K = K_att_fail_[0];
+       [01;31m[K^~~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:468:7:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Kkph_the_[m[K’
+       [01;36m[Kkph_phi_[m[K = K_att_fail_[0];
+       [01;36m[K^~~~~~~~[m[K
+       [32m[Kkph_the_[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:469:7:[m[K [01;31m[Kerror: [m[K‘[01m[Kkdh_phi_[m[K’ was not declared in this scope
+       [01;31m[Kkdh_phi_[m[K = K_att_fail_[1];
+       [01;31m[K^~~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:469:7:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Kkdh_the_[m[K’
+       [01;36m[Kkdh_phi_[m[K = K_att_fail_[1];
+       [01;36m[K^~~~~~~~[m[K
+       [32m[Kkdh_the_[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:470:7:[m[K [01;31m[Kerror: [m[K‘[01m[Kkih_phi_[m[K’ was not declared in this scope
+       [01;31m[Kkih_phi_[m[K = K_att_fail_[2];
+       [01;31m[K^~~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:470:7:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Kkdh_the_[m[K’
+       [01;36m[Kkih_phi_[m[K = K_att_fail_[2];
+       [01;36m[K^~~~~~~~[m[K
+       [32m[Kkdh_the_[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:475:13:[m[K [01;31m[Kerror: [m[K‘[01m[Kkih_the_[m[K’ was not declared in this scope
+           + [01;31m[Kkih_the_[m[K * nb_err_int_(1)
+             [01;31m[K^~~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:475:13:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Kkdh_the_[m[K’
+           + [01;36m[Kkih_the_[m[K * nb_err_int_(1)
+             [01;36m[K^~~~~~~~[m[K
+             [32m[Kkdh_the_[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:478:28:[m[K [01;31m[Kerror: [m[K‘[01m[Kkph_phi_[m[K’ was not declared in this scope
+     omega_dot_design(1) = ([01;31m[Kkph_phi_[m[K * (n_b_(0) - n_des_b(0))
+                            [01;31m[K^~~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:478:28:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Kkph_the_[m[K’
+     omega_dot_design(1) = ([01;36m[Kkph_phi_[m[K * (n_b_(0) - n_des_b(0))
+                            [01;36m[K^~~~~~~~[m[K
+                            [32m[Kkph_the_[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:479:13:[m[K [01;31m[Kerror: [m[K‘[01m[Kkdh_phi_[m[K’ was not declared in this scope
+           + [01;31m[Kkdh_phi_[m[K * (-n_des_b(1) * state_.bodyrates.z() +  n_des_b(2) * state_.bodyrates.y())
+             [01;31m[K^~~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:479:13:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Kkdh_the_[m[K’
+           + [01;36m[Kkdh_phi_[m[K * (-n_des_b(1) * state_.bodyrates.z() +  n_des_b(2) * state_.bodyrates.y())
+             [01;36m[K^~~~~~~~[m[K
+             [32m[Kkdh_the_[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:480:13:[m[K [01;31m[Kerror: [m[K‘[01m[Kkih_phi_[m[K’ was not declared in this scope
+           + [01;31m[Kkih_phi_[m[K * nb_err_int_(0)
+             [01;31m[K^~~~~~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:480:13:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[Kkdh_the_[m[K’
+           + [01;36m[Kkih_phi_[m[K * nb_err_int_(0)
+             [01;36m[K^~~~~~~~[m[K
+             [32m[Kkdh_the_[m[K
+make[2]: *** [CMakeFiles/ftc_ctrl.dir/src/ftc_ctrl.cpp.o] Error 1
+make[1]: *** [CMakeFiles/ftc_ctrl.dir/all] Error 2
+make: *** [all] Error 2

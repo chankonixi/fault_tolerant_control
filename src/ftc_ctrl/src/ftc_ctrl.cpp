@@ -353,6 +353,12 @@ namespace ftc {//主函数在哪里？***
       Eigen::Vector3d pos_err = (pos_design_ - position_used);
       integrator3(pos_err, pos_err_int_, 1.0/ctrl_rate_, max_pos_err_int_);
       a_des_ = Kp_pos * pos_err - Kd_pos * velocity_used + Ki_pos * pos_err_int_ - g_vect_;
+
+      ROS_INFO("pos_err: %f %f %f", pos_err(0), pos_err(1), pos_err(2));
+    ROS_INFO("vel_err: %f %f %f", velocity_used(0), velocity_used(1), velocity_used(2));
+    ROS_INFO("pos_err_int_: %f %f %f", pos_err_int_(0), pos_err_int_(1), pos_err_int_(2));
+    ROS_INFO("a_des_: %f %f %f", a_des_(0), a_des_(1), a_des_(2));
+    ROS_INFO("----------------------------------");
     }
 
     else {
@@ -446,26 +452,32 @@ namespace ftc {//主函数在哪里？***
     motor_command_msg_.thrust = thrust_design;
 
     Eigen::Vector3d omega_dot_design(0.0,0.0,0.0);
-    double kph, kdh, kih;  
+    double kph_the_, kdh_the_, kih_the_, kph_phi_, kdh_phi_, kih_phi_;  
     if (!failure_mode_) {
-      kph = K_att_[0];
-      kdh = K_att_[1];
-      kih = K_att_[2];
+      kph_the_ = K_att_the_[0];
+      kdh_the_ = K_att_the_[1];
+      kih_the_ = K_att_the_[2];
+      kph_phi_ = K_att_phi_[0];
+      kdh_phi_ = K_att_phi_[1];
+      kih_phi_ = K_att_phi_[2];
     }
     else {
-      kph = K_att_fail_[0];
-      kdh = K_att_fail_[1];
-      kih = K_att_fail_[2];
+      kph_the_ = K_att_fail_[0];
+      kdh_the_ = K_att_fail_[1];
+      kih_the_ = K_att_fail_[2];
+      kph_phi_ = K_att_fail_[0];
+      kdh_phi_ = K_att_fail_[1];
+      kih_phi_ = K_att_fail_[2];
     }
 
-    omega_dot_design(0) = (kph * (n_b_(1) - n_des_b(1)) 
-          + kdh * ( n_des_b(0) * state_.bodyrates.z() -  n_des_b(2) * state_.bodyrates.x())
-          + kih * nb_err_int_(1)
+    omega_dot_design(0) = (kph_the_ * (n_b_(1) - n_des_b(1)) 
+          + kdh_the_ * ( n_des_b(0) * state_.bodyrates.z() -  n_des_b(2) * state_.bodyrates.x())
+          + kih_the_ * nb_err_int_(1)
           - (n_des_b(2) * state_.bodyrates.y() - n_des_b(1) * state_.bodyrates.z()) * state_.bodyrates.z()) / ( n_des_b(2));
 
-    omega_dot_design(1) = (kph * (n_b_(0) - n_des_b(0)) 
-          + kdh * (-n_des_b(1) * state_.bodyrates.z() +  n_des_b(2) * state_.bodyrates.y())
-          + kih * nb_err_int_(0)
+    omega_dot_design(1) = (kph_phi_ * (n_b_(0) - n_des_b(0)) 
+          + kdh_phi_ * (-n_des_b(1) * state_.bodyrates.z() +  n_des_b(2) * state_.bodyrates.y())
+          + kih_phi_ * nb_err_int_(0)
           + (n_des_b(0) * state_.bodyrates.z() - n_des_b(2) * state_.bodyrates.x()) * state_.bodyrates.z()) / (-n_des_b(2));
 
     // In the nominal condition, switch on the yaw controller
@@ -530,7 +542,8 @@ namespace ftc {//主函数在哪里？***
     check &= pnh_.getParam("kp_pos", Kp_pos_vec_);
     check &= pnh_.getParam("kd_pos", Kd_pos_vec_);
     check &= pnh_.getParam("ki_pos", Ki_pos_vec_);
-    check &= pnh_.getParam("k_att", K_att_);
+    check &= pnh_.getParam("k_att_the", K_att_the_);
+    check &= pnh_.getParam("k_att_phi", K_att_phi_);
     check &= pnh_.getParam("k_yaw", K_yaw_);
     check &= pnh_.getParam("kp_pos_fail", Kp_pos_vec_fail_);
     check &= pnh_.getParam("kd_pos_fail", Kd_pos_vec_fail_);
