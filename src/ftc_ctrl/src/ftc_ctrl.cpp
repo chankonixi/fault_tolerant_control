@@ -71,15 +71,15 @@ namespace ftc {//主函数在哪里？***
                 0.0,  Iy_,  0.0,
                 0.0,  0.0,  Iz_;
 
-    pos_design_ << 0.0, 0.0, -1.0; //设定位置，程序的惯性坐标系z轴向下
+    pos_design_ << 0.0, 0.0, -1.0; //设定位置，程序的惯性坐标系z轴向上
 
     time_fail_ = 0.0;
     time_traj_update_ = 0.0;
 
     heading_target_ = 0.0;
-    // calculate control effective matrix G and it's inverse
-
     use_vio_ = true;
+
+    // calculate control effective matrix G and it's inverse
     calculateControlEffectiveness();
   
     ROS_INFO("[%s] Controller initialized", ros::this_node::getName().c_str());  
@@ -127,7 +127,7 @@ namespace ftc {//主函数在哪里？***
       G_inv_.rightCols(1) = G_tmp.rightCols(1);//此时G的逆矩阵相当于G3把失效的项行列补零
     }
     else {
-      G_inv_ = G.inverse(); //f_id有错则直接求逆
+      G_inv_ = G.inverse(); //没有损坏情况下直接求逆
     }
   }
 /* 开始正常的的飞行 */
@@ -354,7 +354,7 @@ namespace ftc {//主函数在哪里？***
       integrator3(pos_err, pos_err_int_, 1.0/ctrl_rate_, max_pos_err_int_);
       a_des_ = Kp_pos * pos_err - Kd_pos * velocity_used + Ki_pos * pos_err_int_ - g_vect_;
 
-      ROS_INFO("pos_err: %f %f %f", pos_err(0), pos_err(1), pos_err(2));
+    ROS_INFO("pos_err: %f %f %f", pos_err(0), pos_err(1), pos_err(2));
     ROS_INFO("vel_err: %f %f %f", velocity_used(0), velocity_used(1), velocity_used(2));
     ROS_INFO("pos_err_int_: %f %f %f", pos_err_int_(0), pos_err_int_(1), pos_err_int_(2));
     ROS_INFO("a_des_: %f %f %f", a_des_(0), a_des_(1), a_des_(2));
@@ -425,10 +425,11 @@ namespace ftc {//主函数在哪里？***
     if ((time_now_ - time_fail_) <= 1.0*1e9)
       n_b_ << 0.0, 0.0, 1.0;
     else
-      n_b_ << nx_b_, ny_b_, sqrt(1 - nx_b_*nx_b_ - ny_b_*ny_b_);
+      n_b_ << nx_b_, ny_b_, sqrt(1 - nx_b_*nx_b_ - ny_b_*ny_b_);//机体系坐标
 
     Eigen::Vector3d n_des_i  = a_des_ / a_des_.norm();
     Eigen::Vector3d n_des_b = state_.orientation.inverse() * n_des_i;
+    // ROS_INFO("n_des_b: %f %f %f", n_des_b(0), n_des_b(1), n_des_b(2));
     
     Eigen::Vector3d z_body = state_.orientation.inverse() * Eigen::Vector3d::UnitZ();
     z_body = z_body/z_body.norm()  ;
@@ -440,7 +441,7 @@ namespace ftc {//主函数在哪里？***
     // reduced attitude controller
     Eigen::Vector2d nu_out;
     Eigen::Vector3d nb_err = n_b_ - n_des_b;
-
+    // ROS_INFO("nb_err: %f %f %f", nb_err(0), nb_err(1), nb_err(2));
 
     if(!referenceUpdated_) {
       // Reset all integral terms once take-off command is sent
@@ -495,10 +496,9 @@ namespace ftc {//主函数在哪里？***
       double yaw_rate_err = omega_z_design - state_.bodyrates.z();
       integrator(yaw_rate_err, yaw_rate_err_int_, 1.0/ctrl_rate_, 30.0);
       omega_dot_design(2) =  K_yaw_[1]  * yaw_rate_err + K_yaw_[2] * yaw_rate_err_int_;
-      // ROS_INFO("%f %f %f", omega_dot_design(0), omega_dot_design(1), omega_dot_design(2));
-      inner_design_msg_.bodyrates.x = nb_err(0);//SYSUCODE
-      inner_design_msg_.bodyrates.y = nb_err(1);//SYSUCODE
-      inner_design_msg_.bodyrates.z = nb_err(2);//SYSUCODE
+      inner_design_msg_.bodyrates.x = n_des_b(0);//SYSUCODE
+      inner_design_msg_.bodyrates.y = n_des_b(1);//SYSUCODE
+      inner_design_msg_.bodyrates.z = n_des_b(2);//SYSUCODE
       inner_design_pub_.publish(inner_design_msg_);//SYSUCODE
     }
 
