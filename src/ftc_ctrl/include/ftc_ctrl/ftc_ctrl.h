@@ -40,7 +40,7 @@
 
 namespace ftc
 {
-  struct QuadState//表征的是什么坐标系下的信息？***
+  struct QuadState
   {
     ros::Time timestamp;
     Eigen::Vector3d position;
@@ -173,16 +173,16 @@ namespace ftc
     void integrator(const double &input, double& output, const double dt, const double max);
     void sigmoidTraj(const double pos_end, const double pos_begin,
                           double& pos_des, double& vel_des, double& acc_des, double time);
-
-    // Eigen::Vector3d initial;
-    // void RK4(Eigen::Vector3d(*rungekutta_f)(double time, Eigen::Vector3d runge_x, Eigen::Vector3d runge_y),
-    // Eigen::Vector3d(*rungekutta_g)(double time, Eigen::Vector3d runge_x, Eigen::Vector3d runge_y, Eigen::Vector3d(*acc_use)(double time)), 
-    //                               double initial[3], double resu[3], double h);
-    // Eigen::Vector3d rungekutta_f(double time, Eigen::Vector3d runge_x, Eigen::Vector3d runge_y);
-    // Eigen::Vector3d rungekutta_g(double time, Eigen::Vector3d runge_x, Eigen::Vector3d runge_y, 
-    //                               Eigen::Vector3d(*acc_use)(double t));
-    //有问题
     
+    /*Rungekutta*/
+    Eigen::Vector3d velusedx_in, velusedy_in, velusedx_out, velusedy_out, R_m;
+    Eigen::Vector3d veldesx_in, veldesy_in, veldesx_out, veldesy_out;
+    double R_h;
+    void RungeKuttaProgess(const Eigen::Vector3d& Rx_in, Eigen::Vector3d& Rx_out,const Eigen::Vector3d& Ry_in, Eigen::Vector3d& Ry_out);
+    void setRm(Eigen::Vector3d rm);
+    Eigen::Vector3d R_fun1(Eigen::Vector3d x, Eigen::Vector3d y);
+    Eigen::Vector3d R_fun2(Eigen::Vector3d x, Eigen::Vector3d y);
+    /*Rungekutta*/
   };
 
 } // namespace ftc

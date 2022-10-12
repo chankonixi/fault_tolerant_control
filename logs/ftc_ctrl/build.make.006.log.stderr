@@ -1,0 +1,21 @@
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:[m[K In member function ‘[01m[Kvoid ftc::NDICtrl::RungeKuttaProgess()[m[K’:
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:616:10:[m[K [01;31m[Kerror: [m[K‘[01m[Kfun1[m[K’ was not declared in this scope
+     K1_x=[01;31m[Kfun1[m[K(Rx_in,Ry_in);                         K1_y=fun2(Rx_in,Ry_in);
+          [01;31m[K^~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:616:10:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[KR_fun1[m[K’
+     K1_x=[01;36m[Kfun1[m[K(Rx_in,Ry_in);                         K1_y=fun2(Rx_in,Ry_in);
+          [01;36m[K^~~~[m[K
+          [32m[KR_fun1[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:616:58:[m[K [01;31m[Kerror: [m[K‘[01m[Kfun2[m[K’ was not declared in this scope
+     K1_x=fun1(Rx_in,Ry_in);                         K1_y=[01;31m[Kfun2[m[K(Rx_in,Ry_in);
+                                                          [01;31m[K^~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:616:58:[m[K [01;36m[Knote: [m[Ksuggested alternative: ‘[01m[KR_fun2[m[K’
+     K1_x=fun1(Rx_in,Ry_in);                         K1_y=[01;36m[Kfun2[m[K(Rx_in,Ry_in);
+                                                          [01;36m[K^~~~[m[K
+                                                          [32m[KR_fun2[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:617:26:[m[K [01;31m[Kerror: [m[K‘[01m[Kh[m[K’ was not declared in this scope
+     K2_x=fun1(Rx_in+K1_x*[01;31m[Kh[m[K/2,Ry_in+K1_y*h/2);       K2_y=fun2(Rx_in+K1_x*h/2,Ry_in+K1_y*h/2);
+                          [01;31m[K^[m[K
+make[2]: *** [CMakeFiles/ftc_ctrl.dir/src/ftc_ctrl.cpp.o] Error 1
+make[1]: *** [CMakeFiles/ftc_ctrl.dir/all] Error 2
+make: *** [all] Error 2

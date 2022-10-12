@@ -1,8 +1,0 @@
-[ 12%] [32m[1mLinking CXX executable /home/cheng/fault_tolerant_control/devel/.private/offboard/lib/offboard/ground_station[0m
-[ 25%] Built target ground_station
-[ 37%] [32m[1mLinking CXX executable /home/cheng/fault_tolerant_control/devel/.private/offboard/lib/offboard/rotor_control_test[0m
-[ 50%] Built target rotor_control_test
-[ 62%] [32m[1mLinking CXX executable /home/cheng/fault_tolerant_control/devel/.private/offboard/lib/offboard/offboard_node4[0m
-[ 75%] Built target offboard_node4
-[ 87%] [32m[1mLinking CXX executable /home/cheng/fault_tolerant_control/devel/.private/offboard/lib/offboard/offboard_node1[0m
-[100%] Built target offboard_node1

@@ -1,0 +1,10 @@
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:614:8:[m[K [01;31m[Kerror: [m[Kprototype for ‘[01m[Kvoid ftc::NDICtrl::RungeKuttaProgess(const Vector3d&, Eigen::Vector3d, const Vector3d&, Eigen::Vector3d)[m[K’ does not match any in class ‘[01m[Kftc::NDICtrl[m[K’
+   void [01;31m[KNDICtrl[m[K::RungeKuttaProgess(
+        [01;31m[K^~~~~~~[m[K
+In file included from [01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:22:0[m[K:
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/include/ftc_ctrl/ftc_ctrl.h:180:10:[m[K [01;31m[Kerror: [m[Kcandidate is: void ftc::NDICtrl::RungeKuttaProgess(const Vector3d&, Eigen::Vector3d&, const Vector3d&, Eigen::Vector3d&)
+     void [01;31m[KRungeKuttaProgess[m[K(const Eigen::Vector3d& Rx_in, Eigen::Vector3d& Rx_out,const Eigen::Vector3d& Ry_in, Eigen::Vector3d& Ry_out);
+          [01;31m[K^~~~~~~~~~~~~~~~~[m[K
+make[2]: *** [CMakeFiles/ftc_ctrl.dir/src/ftc_ctrl.cpp.o] Error 1
+make[1]: *** [CMakeFiles/ftc_ctrl.dir/all] Error 2
+make: *** [all] Error 2

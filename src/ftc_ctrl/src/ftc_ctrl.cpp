@@ -59,6 +59,17 @@ namespace ftc {//主函数在哪里？***
     motor_command_msg_.control_mode = 3;
     motor_command_msg_.mot_throttle = {0.0, 0.0, 0.0, 0.0};
 
+    /*Rungekutta*/
+    R_h = 1.0/ctrl_rate_;  
+    velusedx_in << 0.0, 0.0, 0.0;
+    velusedy_in << 0.0, 0.0, 0.0;
+    velusedx_out << 0.0, 0.0, 0.0;
+    velusedy_out << 0.0, 0.0, 0.0;
+    veldesx_in << 0.0, 0.0, 0.0;
+    veldesy_in << 0.0, 0.0, 0.0;
+    veldesx_out << 0.0, 0.0, 0.0;
+    veldesy_out << 0.0, 0.0, 0.0;
+
     if (sqrt(nx_b_*nx_b_+ny_b_*ny_b_) >= 0.5) {
       ROS_ERROR("[%s] Wrong primary axis setting.",
        pnh_.getNamespace().c_str());
@@ -358,28 +369,25 @@ namespace ftc {//主函数在哪里？***
     if(!referenceUpdated_)
       time = 0.0;
 
+    Eigen::Vector3d acc_used, vdes_d_;
     if (!sigmoid_traj_ || (time<0)) {
-      // ROS_INFO("%f",time);
       Eigen::Vector3d pos_err = (pos_design_ - position_used);
-      Eigen::Vector3d v_des_ = Kp_pos * pos_err;//SYSU_CODE
-      Eigen::Vector3d vel_err = (v_des_ - velocity_used); //SYSU_CODE
-      Eigen::Vector3d acc_used = (velocity_used - velocity_oldused) * ctrl_rate_;//SYSU_CODE
-      integrator3(pos_err, pos_err_int_, 1.0/ctrl_rate_, max_pos_err_int_);
-      integrator3(vel_err, vel_err_int_, 1.0/ctrl_rate_, max_vel_err_int_);//SYSU_CODE 限幅暂时用pos
-      // a_des_ = Kp_pos * pos_err - Kd_pos * velocity_used + Ki_pos * pos_err_int_ - g_vect_;
-      a_des_ = Kp_vel * vel_err - Kd_vel * acc_used + Ki_vel * pos_err - g_vect_;
-      // ROS_INFO("pos_err: %f %f %f", pos_err(0), pos_err(1), pos_err(2));
-      // ROS_INFO("v_des_: %f %f %f", v_des_(0), v_des_(1), v_des_(2));
-      // ROS_INFO("velocity_used: %f %f %f", velocity_used(0), velocity_used(1), velocity_used(2));
-      // ROS_INFO("vel_err: %f %f %f", vel_err(0), vel_err(1), vel_err(2));
-      // ROS_INFO("acc_used: %f %f %f", acc_used(0), acc_used(1), acc_used(2));
-      // ROS_INFO("vel_err_int_: %f %f %f", vel_err_int_(0), vel_err_int_(1), vel_err_int_(2));
-      // ROS_INFO("a_des_: %f %f %f", a_des_(0), a_des_(1), a_des_(2));
-      // ROS_INFO("--------------------------------------------");
+      Eigen::Vector3d v_des_ = Kp_pos * pos_err;
+      Eigen::Vector3d vel_err = (v_des_ - velocity_used); 
+
+      setRm(velocity_used);
+      RungeKuttaProgess(velusedx_in, velusedy_in, velusedx_out, velusedy_out);
+      acc_used = velusedy_out; velusedx_in = velusedx_out; velusedy_in = velusedy_out;
+
+      setRm(v_des_);
+      RungeKuttaProgess(veldesx_in, veldesy_in, veldesx_out, veldesy_out);
+      vdes_d_ = veldesy_out; veldesx_in = veldesx_out; veldesy_in = veldesy_out;
+
+      Eigen::Vector3d acc_err = (vdes_d_ - acc_used); 
+      a_des_ = Kp_vel * vel_err + Kd_vel * acc_err + Ki_vel * pos_err - g_vect_;
     }
 
     else {
-      // ROS_INFO("%f",time);
       Eigen::Vector3d pos_des, vel_des, acc_des;
       
       sigmoidTraj(pos_design_(0), position_at_update_(0), pos_des(0), vel_des(0), acc_des(0), time);
@@ -388,19 +396,23 @@ namespace ftc {//主函数在哪里？***
       pos_des(2) = pos_design_(2);
       vel_des(2) = 0.0;
       acc_des(2) = 0.0;
+      ROS_INFO("pos_des: %f %f %f",pos_des(0),pos_des(1),pos_des(2));
+      ROS_INFO("acc_des: %f %f %f",acc_des(0),acc_des(1),acc_des(2));
 
-      Eigen::Vector3d pos_err = (pos_des - position_used);   
-      integrator3(pos_err, pos_err_int_, 1.0/ctrl_rate_, max_pos_err_int_);
-      Eigen::Vector3d acc_used = (velocity_used - velocity_oldused) * ctrl_rate_;//SYSU_CODE
-      // a_des_ = acc_des + Kd_pos * (vel_des - velocity_used) 
-      //           + Kp_pos * pos_err  + Ki_pos * pos_err_int_ - g_vect_;      
-      v_des_ = Kp_pos * pos_err;//SYSU_CODE
-      Eigen::Vector3d vel_err = (v_des_ - velocity_used); //SYSU_CODE 
-      integrator3(vel_err, vel_err_int_, 1.0/ctrl_rate_, max_vel_err_int_);//SYSU_CODE
-      a_des_ = Kp_vel * vel_err - Kd_vel * acc_used + Ki_vel * pos_err - g_vect_;
-      // ROS_INFO("v_des_: %f %f %f", v_des_(0), v_des_(1), v_des_(2));
-      // ROS_INFO("a_des_: %f %f %f", a_des_(0), a_des_(1), a_des_(2));
-      // ROS_INFO("acc_used: %f %f %f", acc_used(0), acc_used(1), acc_used(2));
+      Eigen::Vector3d pos_err = (pos_des - position_used);  
+      v_des_ = Kp_pos * pos_err; 
+      Eigen::Vector3d vel_err = (v_des_ - velocity_used); 
+  
+      setRm(velocity_used);
+      RungeKuttaProgess(velusedx_in, velusedy_in, velusedx_out, velusedy_out);
+      acc_used = velusedy_out; velusedx_in = velusedx_out; velusedy_in = velusedy_out;
+
+      setRm(v_des_);
+      RungeKuttaProgess(veldesx_in, veldesy_in, veldesx_out, veldesy_out);
+      vdes_d_ = veldesy_out; veldesx_in = veldesx_out; veldesy_in = veldesy_out;
+
+      Eigen::Vector3d acc_err = (vdes_d_ - acc_used);
+      a_des_ = Kp_vel * vel_err + Kd_vel * acc_err + Ki_vel * pos_err - g_vect_;
     }
 
     // acceleration command hedging
@@ -625,6 +637,33 @@ namespace ftc {//主函数在哪里？***
 
     return;
   }
+
+  void NDICtrl::RungeKuttaProgess(
+    const Eigen::Vector3d& Rx_in, Eigen::Vector3d& Rx_out,const Eigen::Vector3d& Ry_in, Eigen::Vector3d& Ry_out){
+    Eigen::Vector3d K1_x,K2_x,K3_x,K4_x,K1_y,K2_y,K3_y,K4_y;
+    K1_x=R_fun1(Rx_in,Ry_in);                             K1_y=R_fun2(Rx_in,Ry_in);
+    K2_x=R_fun1(Rx_in+K1_x*R_h/2,Ry_in+K1_y*R_h/2);       K2_y=R_fun2(Rx_in+K1_x*R_h/2,Ry_in+K1_y*R_h/2);
+    K3_x=R_fun1(Rx_in+K2_x*R_h/2,Ry_in+K2_y*R_h/2);       K3_y=R_fun2(Rx_in+K2_x*R_h/2,Ry_in+K2_y*R_h/2);
+    K4_x=R_fun1(Rx_in+K3_x*R_h,Ry_in+K3_y*R_h);           K4_y=R_fun2(Rx_in+K3_x*R_h,Ry_in+K3_y*R_h);
+    Rx_out=Rx_in+R_h*(K1_x+2*K2_x+2*K3_x+K4_x)/6.0;       Ry_out=Ry_in+R_h*(K1_y+2*K2_y+2*K3_y+K4_y)/6.0;
+  }
+
+  Eigen::Vector3d NDICtrl::R_fun1(Eigen::Vector3d x ,Eigen::Vector3d y){
+    Eigen::Vector3d dx;
+    dx = y;
+    return dx;
+  }
+
+  Eigen::Vector3d NDICtrl::R_fun2(Eigen::Vector3d x ,Eigen::Vector3d y){
+    Eigen::Vector3d dy;
+    dy = (R_m - x) * 25 - 2 * 5 * 0.7 * y;
+    return dy;
+  }
+
+  void NDICtrl::setRm(Eigen::Vector3d rm){
+    R_m = rm;
+  }
+
 
 } //namespace ftc
 
