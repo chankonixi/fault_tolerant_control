@@ -1,0 +1,4 @@
+[ 87%] Built target ground_station
+[ 87%] Built target offboard_node1
+[100%] Built target rotor_control_test
+[100%] Built target offboard_node4

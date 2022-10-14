@@ -199,7 +199,6 @@ void RotorSInterface::ftcInnerdesignCallback(const quad_msgs::QuadStateEstimate:
     msg_inn.bodyrates.x = msg->bodyrates.x;
     msg_inn.bodyrates.y = msg->bodyrates.y;
     msg_inn.bodyrates.z = msg->bodyrates.z;
-    // ROS_INFO("%f %f %f", msg_inn.bodyrates.x, msg_inn.bodyrates.y, msg_inn.bodyrates.z);
 }
 /*SYSUCODE*/
 
@@ -219,12 +218,10 @@ void RotorSInterface::looptrajectory()
     if (armed_out_.data) 
     {
         double time = ros::Time::now().toSec() - time_traj_received_;
-        ROS_INFO("time is %f", time);
         pos_design_msg_.x = 0.0;
         pos_design_msg_.y = 0.0;
-        pos_design_msg_.z = 1/(1+exp(-time/5));
+        pos_design_msg_.z = 1/(1+exp(-(time-1)/2));
         reference_pub_.publish(pos_design_msg_);
-        ROS_INFO("pos_design_: %f %f %f",pos_design_msg_.x,pos_design_msg_.y,pos_design_msg_.z);
     }
     else 
     {

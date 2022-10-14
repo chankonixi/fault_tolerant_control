@@ -23,7 +23,7 @@
 using namespace std;
 
 
-namespace ftc {//主函数在哪里？***
+namespace ftc {
   NDICtrl::NDICtrl
   (const ros::NodeHandle& nh, const ros::NodeHandle& pnh){//构造函数，里面的函数按顺序执行
     nh_ = nh;
@@ -60,7 +60,7 @@ namespace ftc {//主函数在哪里？***
     motor_command_msg_.mot_throttle = {0.0, 0.0, 0.0, 0.0};
 
     /*Rungekutta*/
-    R_h = 1.0/ctrl_rate_;  
+    R_h = 1.0/ctrl_rate_; R_w = 2; R_ksi = 0.7; 
     velusedx_in << 0.0, 0.0, 0.0;
     velusedy_in << 0.0, 0.0, 0.0;
     velusedx_out << 0.0, 0.0, 0.0;
@@ -98,7 +98,6 @@ namespace ftc {//主函数在哪里？***
 
   NDICtrl::~NDICtrl(){}
 
-  /*问题：G是怎么计算的*/
   void NDICtrl::calculateControlEffectiveness() {    
   
     Eigen::Matrix4d G;//与论文有差异，将T放到了最后一位
@@ -300,9 +299,8 @@ namespace ftc {//主函数在哪里？***
       motor_command_msg_.mot_throttle[f_id_] = 0;//失效旋翼PWM值为0
       motor_command_msg_.rotor_thrust[f_id_] = 0.0;//失效旋翼升力为0
     }
-     
-    // ROS_INFO("motor_command_pub!");
-     motor_command_pub_.publish(motor_command_msg_);//发布旋翼控制信息
+    
+    motor_command_pub_.publish(motor_command_msg_);//发布旋翼控制信息
 
     return;
   }
@@ -385,6 +383,9 @@ namespace ftc {//主函数在哪里？***
 
       Eigen::Vector3d acc_err = (vdes_d_ - acc_used); 
       a_des_ = Kp_vel * vel_err + Kd_vel * acc_err + Ki_vel * pos_err - g_vect_;
+      ROS_INFO("acc_used: %f %f %f",acc_used(0),acc_used(1),acc_used(2));
+      ROS_INFO("v_des_: %f %f %f",v_des_(0),v_des_(1),v_des_(2));
+      ROS_INFO("a_des_: %f %f %f",a_des_(0),a_des_(1),a_des_(2));
     }
 
     else {
@@ -397,6 +398,7 @@ namespace ftc {//主函数在哪里？***
       vel_des(2) = 0.0;
       acc_des(2) = 0.0;
       ROS_INFO("pos_des: %f %f %f",pos_des(0),pos_des(1),pos_des(2));
+      ROS_INFO("vel_des: %f %f %f",vel_des(0),vel_des(1),vel_des(2));
       ROS_INFO("acc_des: %f %f %f",acc_des(0),acc_des(1),acc_des(2));
 
       Eigen::Vector3d pos_err = (pos_des - position_used);  
@@ -522,9 +524,9 @@ namespace ftc {//主函数在哪里？***
       integrator(yaw_rate_err, yaw_rate_err_int_, 1.0/ctrl_rate_, 30.0);
       omega_dot_design(2) =  K_yaw_[1]  * yaw_rate_err + K_yaw_[2] * yaw_rate_err_int_;
       // ROS_INFO("%f %f %f", omega_dot_design(0), omega_dot_design(1), omega_dot_design(2));
-      inner_design_msg_.bodyrates.x = nb_err(0);//SYSUCODE
-      inner_design_msg_.bodyrates.y = nb_err(1);//SYSUCODE
-      inner_design_msg_.bodyrates.z = nb_err(2);//SYSUCODE
+      inner_design_msg_.bodyrates.x = n_des_b(0);//SYSUCODE
+      inner_design_msg_.bodyrates.y = n_des_b(1);//SYSUCODE
+      inner_design_msg_.bodyrates.z = n_des_b(2);//SYSUCODE
       inner_design_pub_.publish(inner_design_msg_);//SYSUCODE
     }
 
@@ -656,7 +658,7 @@ namespace ftc {//主函数在哪里？***
 
   Eigen::Vector3d NDICtrl::R_fun2(Eigen::Vector3d x ,Eigen::Vector3d y){
     Eigen::Vector3d dy;
-    dy = (R_m - x) * 25 - 2 * 5 * 0.7 * y;
+    dy = (R_m - x) * R_w * R_w - 2 * R_w * R_ksi * y;
     return dy;
   }
 

@@ -126,12 +126,6 @@ ros/ros.h
 ftc_ctrl/ftc_ctrl.h
 /home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl/ftc_ctrl.h
 
-/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl_node.cpp
-ros/ros.h
--
-ftc_ctrl/ftc_ctrl.h
-/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl/ftc_ctrl.h
-
 /opt/ros/melodic/include/geometry_msgs/Point.h
 string
 -

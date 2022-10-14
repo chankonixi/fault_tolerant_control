@@ -177,7 +177,7 @@ namespace ftc
     /*Rungekutta*/
     Eigen::Vector3d velusedx_in, velusedy_in, velusedx_out, velusedy_out, R_m;
     Eigen::Vector3d veldesx_in, veldesy_in, veldesx_out, veldesy_out;
-    double R_h;
+    double R_h, R_ksi, R_w;
     void RungeKuttaProgess(const Eigen::Vector3d& Rx_in, Eigen::Vector3d& Rx_out,const Eigen::Vector3d& Ry_in, Eigen::Vector3d& Ry_out);
     void setRm(Eigen::Vector3d rm);
     Eigen::Vector3d R_fun1(Eigen::Vector3d x, Eigen::Vector3d y);
