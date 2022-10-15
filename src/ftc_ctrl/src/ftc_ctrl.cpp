@@ -23,7 +23,7 @@
 using namespace std;
 
 
-namespace ftc {//主函数在哪里？***
+namespace ftc {
   NDICtrl::NDICtrl
   (const ros::NodeHandle& nh, const ros::NodeHandle& pnh){//构造函数，里面的函数按顺序执行
     nh_ = nh;
@@ -87,7 +87,6 @@ namespace ftc {//主函数在哪里？***
 
   NDICtrl::~NDICtrl(){}
 
-  /*问题：G是怎么计算的*/
   void NDICtrl::calculateControlEffectiveness() {    
   
     Eigen::Matrix4d G;//与论文有差异，将T放到了最后一位
