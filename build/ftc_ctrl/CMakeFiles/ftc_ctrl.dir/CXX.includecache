@@ -112,10 +112,6 @@ filter.h
 mavros_msgs/RotorControl.h
 -
 
-/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/filter.cpp
-ftc_ctrl/filter.h
-/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl/filter.h
-
 /home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp
 iostream
 -
