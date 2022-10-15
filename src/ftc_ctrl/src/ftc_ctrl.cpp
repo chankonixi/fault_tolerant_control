@@ -484,9 +484,9 @@ namespace ftc {//主函数在哪里？***
       integrator(yaw_rate_err, yaw_rate_err_int_, 1.0/ctrl_rate_, 30.0);
       omega_dot_design(2) =  K_yaw_[1]  * yaw_rate_err + K_yaw_[2] * yaw_rate_err_int_;
       // ROS_INFO("%f %f %f", omega_dot_design(0), omega_dot_design(1), omega_dot_design(2));
-      inner_design_msg_.bodyrates.x = nb_err(0);//SYSUCODE
-      inner_design_msg_.bodyrates.y = nb_err(1);//SYSUCODE
-      inner_design_msg_.bodyrates.z = nb_err(2);//SYSUCODE
+      inner_design_msg_.bodyrates.x = n_des_b(0);//SYSUCODE
+      inner_design_msg_.bodyrates.y = n_des_b(1);//SYSUCODE
+      inner_design_msg_.bodyrates.z = n_des_b(2);//SYSUCODE
       inner_design_pub_.publish(inner_design_msg_);//SYSUCODE
     }
 
