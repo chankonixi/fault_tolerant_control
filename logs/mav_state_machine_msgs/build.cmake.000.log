@@ -20,8 +20,8 @@ CMake Deprecation Warning at CMakeLists.txt:1 (cmake_minimum_required):
 [36m--[0m Detecting CXX compile features
 [36m--[0m Detecting CXX compile features - done
 [36m--[0m Using CATKIN_DEVEL_PREFIX: /home/cheng/fault_tolerant_control/devel/.private/mav_state_machine_msgs
-[36m--[0m Using CMAKE_PREFIX_PATH: /home/cheng/fault_tolerant_control/devel;/opt/ros/melodic
-[36m--[0m This workspace overlays: /home/cheng/fault_tolerant_control/devel;/opt/ros/melodic
+[36m--[0m Using CMAKE_PREFIX_PATH: /home/cheng/catkin_ws/devel;/home/cheng/fault_tolerant_control/devel;/opt/ros/melodic
+[36m--[0m This workspace overlays: /home/cheng/catkin_ws/devel;/home/cheng/fault_tolerant_control/devel;/opt/ros/melodic
 [36m--[0m Found PythonInterp: /usr/bin/python2 (found suitable version "2.7.17", minimum required is "2")
 [36m--[0m Using PYTHON_EXECUTABLE: /usr/bin/python2
 [36m--[0m Using Debian Python package layout

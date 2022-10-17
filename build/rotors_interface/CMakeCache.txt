@@ -437,7 +437,7 @@ nav_msgs_DIR:PATH=/opt/ros/melodic/share/nav_msgs/cmake
 pluginlib_DIR:PATH=/opt/ros/melodic/share/pluginlib/cmake
 
 //The directory containing a CMake configuration file for quad_msgs.
-quad_msgs_DIR:PATH=/home/cheng/fault_tolerant_control/devel/share/quad_msgs/cmake
+quad_msgs_DIR:PATH=/home/cheng/catkin_ws/devel/share/quad_msgs/cmake
 
 //The directory containing a CMake configuration file for rosconsole.
 rosconsole_DIR:PATH=/opt/ros/melodic/share/rosconsole/cmake

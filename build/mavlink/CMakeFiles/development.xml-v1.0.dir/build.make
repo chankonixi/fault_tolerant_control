@@ -79,7 +79,7 @@ include/v1.0/development/development.h: /home/cheng/fault_tolerant_control/src/m
 include/v1.0/development/development.h: /home/cheng/fault_tolerant_control/src/mavlink/message_definitions/v1.0/common.xml
 include/v1.0/development/development.h: /home/cheng/fault_tolerant_control/src/mavlink/pymavlink/tools/mavgen.py
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/cheng/fault_tolerant_control/build/mavlink/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating include/v1.0/development/development.h"
-	/usr/bin/env PYTHONPATH="/home/cheng/fault_tolerant_control/src/mavlink:/home/cheng/fault_tolerant_control/devel/lib/python2.7/dist-packages:/opt/ros/melodic/lib/python2.7/dist-packages" /usr/bin/python2.7 /home/cheng/fault_tolerant_control/src/mavlink/pymavlink/tools/mavgen.py --lang=C --wire-protocol=1.0 --output=include/v1.0 /home/cheng/fault_tolerant_control/src/mavlink/message_definitions/v1.0/development.xml
+	/usr/bin/env PYTHONPATH="/home/cheng/fault_tolerant_control/src/mavlink:/home/cheng/catkin_ws/devel/lib/python2.7/dist-packages:/opt/ros/melodic/lib/python2.7/dist-packages" /usr/bin/python2.7 /home/cheng/fault_tolerant_control/src/mavlink/pymavlink/tools/mavgen.py --lang=C --wire-protocol=1.0 --output=include/v1.0 /home/cheng/fault_tolerant_control/src/mavlink/message_definitions/v1.0/development.xml
 
 development.xml-v1.0: CMakeFiles/development.xml-v1.0
 development.xml-v1.0: include/v1.0/development/development.h

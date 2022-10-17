@@ -19,8 +19,8 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "/home/cheng/fault_tolerant_control/src/rotors_interface/include"
+  "/home/cheng/catkin_ws/devel/.private/quad_msgs/include"
   "/home/cheng/fault_tolerant_control/devel/.private/mav_msgs/include"
-  "/home/cheng/fault_tolerant_control/devel/.private/quad_msgs/include"
   "/home/cheng/fault_tolerant_control/devel/include"
   "/home/cheng/fault_tolerant_control/devel/.private/mavros_msgs/include"
   "/home/cheng/fault_tolerant_control/src/mav_comm/mav_msgs/include"

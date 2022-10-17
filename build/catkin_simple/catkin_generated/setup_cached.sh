@@ -8,8 +8,6 @@
 
 # modified environment variables
 export CMAKE_PREFIX_PATH="/home/cheng/fault_tolerant_control/devel/.private/catkin_simple:$CMAKE_PREFIX_PATH"
-export LD_LIBRARY_PATH="/home/cheng/fault_tolerant_control/devel/.private/catkin_simple/lib:$LD_LIBRARY_PATH"
-export PKG_CONFIG_PATH="/home/cheng/fault_tolerant_control/devel/.private/catkin_simple/lib/pkgconfig:$PKG_CONFIG_PATH"
 export PWD='/home/cheng/fault_tolerant_control/build/catkin_simple'
 export ROSLISP_PACKAGE_DIRECTORIES="/home/cheng/fault_tolerant_control/devel/.private/catkin_simple/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
 export ROS_PACKAGE_PATH="/home/cheng/fault_tolerant_control/src/catkin_simple:$ROS_PACKAGE_PATH"

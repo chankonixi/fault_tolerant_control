@@ -13,10 +13,13 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/home/cheng/fault_tolerant_control/src/mavlink/config.cmake.in"
   "/home/cheng/fault_tolerant_control/src/mavlink/config.h.in"
   "/home/cheng/fault_tolerant_control/src/mavlink/pc.in"
+  "/usr/local/share/cmake-3.19/Modules/CMakeDetermineSystem.cmake"
   "/usr/local/share/cmake-3.19/Modules/CMakeGenericSystem.cmake"
   "/usr/local/share/cmake-3.19/Modules/CMakeInitializeConfigs.cmake"
+  "/usr/local/share/cmake-3.19/Modules/CMakeSystem.cmake.in"
   "/usr/local/share/cmake-3.19/Modules/CMakeSystemSpecificInformation.cmake"
   "/usr/local/share/cmake-3.19/Modules/CMakeSystemSpecificInitialize.cmake"
+  "/usr/local/share/cmake-3.19/Modules/CMakeUnixFindMake.cmake"
   "/usr/local/share/cmake-3.19/Modules/FindPackageHandleStandardArgs.cmake"
   "/usr/local/share/cmake-3.19/Modules/FindPackageMessage.cmake"
   "/usr/local/share/cmake-3.19/Modules/FindPython/Support.cmake"
@@ -34,6 +37,7 @@ set(CMAKE_MAKEFILE_OUTPUTS
 
 # Byproducts of CMake generate step:
 set(CMAKE_MAKEFILE_PRODUCTS
+  "CMakeFiles/3.19.2/CMakeSystem.cmake"
   "config.h"
   "mavlink-config.cmake"
   "mavlink.pc"
