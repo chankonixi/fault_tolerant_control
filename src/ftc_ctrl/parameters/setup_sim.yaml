@@ -36,9 +36,9 @@ minMot: 200  # min rotor thrust command
 maxMot: 1700 # max rotor thrust command   
 
 # /*实验qav250的F80电机参数*/
-mot_coeff1: -1.9715e-06                    
-mot_coeff2: 0.0133
-mot_coeff3: -11.3816
+# mot_coeff1: -1.9715e-06                    
+# mot_coeff2: 0.0133
+# mot_coeff3: -11.3816
 
 #错误
 # mot_coeff1: 4.3178e-07                    
@@ -46,9 +46,9 @@ mot_coeff3: -11.3816
 # mot_coeff3: 4.6145
 
 # /*gazebo仿真电机参数*/
-# mot_coeff1: 5.8381e-6
-# mot_coeff2: -0.0105
-# mot_coeff3: 4.6145
+mot_coeff1: 5.8381e-6
+mot_coeff2: -0.0105
+mot_coeff3: 4.6145
 rotor_thrust_coeff: 8.54858e-06 
 
 ############# Other params ################
