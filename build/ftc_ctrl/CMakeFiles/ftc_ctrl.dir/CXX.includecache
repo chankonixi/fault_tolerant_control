@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/cheng/catkin_ws/devel/.private/quad_msgs/include/quad_msgs/ControlCommand.h
+/home/cheng/fault_tolerant_control/devel/.private/quad_msgs/include/quad_msgs/ControlCommand.h
 string
 -
 vector
@@ -30,7 +30,7 @@ geometry_msgs/Vector3.h
 geometry_msgs/Vector3.h
 -
 
-/home/cheng/catkin_ws/devel/.private/quad_msgs/include/quad_msgs/QuadStateEstimate.h
+/home/cheng/fault_tolerant_control/devel/.private/quad_msgs/include/quad_msgs/QuadStateEstimate.h
 string
 -
 vector

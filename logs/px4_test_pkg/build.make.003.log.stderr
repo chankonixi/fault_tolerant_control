@@ -1,0 +1,8 @@
+In file included from [01m[K/home/cheng/fault_tolerant_control/src/px4_test_pkg/src/controller.cpp:1:0[m[K:
+[01m[K/home/cheng/fault_tolerant_control/src/px4_test_pkg/include/px4_test_pkg/controller.h:11:10:[m[K [01;31m[Kfatal error: [m[Ktf2_geometry_msgs/tf2_geometry_msgs.h: 没有那个文件或目录
+ #include [01;31m[K<tf2_geometry_msgs/tf2_geometry_msgs.h>[m[K // getIdentity
+          [01;31m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+compilation terminated.
+make[2]: *** [CMakeFiles/controller.dir/src/controller.cpp.o] Error 1
+make[1]: *** [CMakeFiles/controller.dir/all] Error 2
+make: *** [all] Error 2

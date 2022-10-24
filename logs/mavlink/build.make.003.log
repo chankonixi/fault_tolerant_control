@@ -1,0 +1,113 @@
+[  9%] [34m[1mGenerating icarous-v2.0-cxx-stamp[0m
+[  9%] [34m[1mGenerating paparazzi-v2.0-cxx-stamp[0m
+[ 13%] [34m[1mGenerating matrixpilot-v2.0-cxx-stamp[0m
+[ 18%] [34m[1mGenerating include/v1.0/icarous/icarous.h[0m
+[ 22%] [34m[1mGenerating ualberta-v2.0-cxx-stamp[0m
+[ 27%] [34m[1mGenerating include/v1.0/development/development.h[0m
+[ 31%] [34m[1mGenerating include/v1.0/ASLUAV/ASLUAV.h[0m
+[ 36%] [34m[1mGenerating ardupilotmega-v2.0-cxx-stamp[0m
+[ 40%] [34m[1mGenerating include/v1.0/ardupilotmega/ardupilotmega.h[0m
+[ 45%] [34m[1mGenerating standard-v2.0-cxx-stamp[0m
+Traceback (most recent call last):
+  File "/home/cheng/fault_tolerant_control/src/mavlink/pymavlink/tools/mavgen.py", line 16, in <module>
+    from pymavlink.generator import mavgen
+  File "/home/cheng/fault_tolerant_control/src/mavlink/pymavlink/generator/mavgen.py", line 26, in <module>
+    from future import standard_library
+ImportError: No module named future
+Traceback (most recent call last):
+  File "/home/cheng/fault_tolerant_control/src/mavlink/pymavlink/tools/mavgen.py", line 16, in <module>
+    from pymavlink.generator import mavgen
+  File "/home/cheng/fault_tolerant_control/src/mavlink/pymavlink/generator/mavgen.py", line 26, in <module>
+    from future import standard_library
+ImportError: No module named future
+Traceback (most recent call last):
+  File "/home/cheng/fault_tolerant_control/src/mavlink/pymavlink/tools/mavgen.py", line 16, in <module>
+    from pymavlink.generator import mavgen
+  File "/home/cheng/fault_tolerant_control/src/mavlink/pymavlink/generator/mavgen.py", line 26, in <module>
+    from future import standard_library
+ImportError: No module named future
+CMakeFiles/paparazzi.xml-v2.0.dir/build.make:62: recipe for target 'paparazzi-v2.0-cxx-stamp' failed
+make[2]: *** [paparazzi-v2.0-cxx-stamp] Error 1
+CMakeFiles/Makefile2:96: recipe for target 'CMakeFiles/paparazzi.xml-v2.0.dir/all' failed
+make[1]: *** [CMakeFiles/paparazzi.xml-v2.0.dir/all] Error 2
+make[1]: *** 正在等待未完成的任务....
+CMakeFiles/icarous.xml-v1.0.dir/build.make:62: recipe for target 'include/v1.0/icarous/icarous.h' failed
+make[2]: *** [include/v1.0/icarous/icarous.h] Error 1
+CMakeFiles/Makefile2:192: recipe for target 'CMakeFiles/icarous.xml-v1.0.dir/all' failed
+make[1]: *** [CMakeFiles/icarous.xml-v1.0.dir/all] Error 2
+CMakeFiles/development.xml-v1.0.dir/build.make:62: recipe for target 'include/v1.0/development/development.h' failed
+make[2]: *** [include/v1.0/development/development.h] Error 1
+CMakeFiles/Makefile2:224: recipe for target 'CMakeFiles/development.xml-v1.0.dir/all' failed
+make[1]: *** [CMakeFiles/development.xml-v1.0.dir/all] Error 2
+Traceback (most recent call last):
+  File "/home/cheng/fault_tolerant_control/src/mavlink/pymavlink/tools/mavgen.py", line 16, in <module>
+    from pymavlink.generator import mavgen
+  File "/home/cheng/fault_tolerant_control/src/mavlink/pymavlink/generator/mavgen.py", line 26, in <module>
+    from future import standard_library
+ImportError: No module named future
+Traceback (most recent call last):
+  File "/home/cheng/fault_tolerant_control/src/mavlink/pymavlink/tools/mavgen.py", line 16, in <module>
+    from pymavlink.generator import mavgen
+  File "/home/cheng/fault_tolerant_control/src/mavlink/pymavlink/generator/mavgen.py", line 26, in <module>
+    from future import standard_library
+ImportError: No module named future
+Traceback (most recent call last):
+  File "/home/cheng/fault_tolerant_control/src/mavlink/pymavlink/tools/mavgen.py", line 16, in <module>
+    from pymavlink.generator import mavgen
+  File "/home/cheng/fault_tolerant_control/src/mavlink/pymavlink/generator/mavgen.py", line 26, in <module>
+    from future import standard_library
+ImportError: No module named future
+Traceback (most recent call last):
+  File "/home/cheng/fault_tolerant_control/src/mavlink/pymavlink/tools/mavgen.py", line 16, in <module>
+    from pymavlink.generator import mavgen
+  File "/home/cheng/fault_tolerant_control/src/mavlink/pymavlink/generator/mavgen.py", line 26, in <module>
+    from future import standard_library
+ImportError: No module named future
+Traceback (most recent call last):
+  File "/home/cheng/fault_tolerant_control/src/mavlink/pymavlink/tools/mavgen.py", line 16, in <module>
+    from pymavlink.generator import mavgen
+  File "/home/cheng/fault_tolerant_control/src/mavlink/pymavlink/generator/mavgen.py", line 26, in <module>
+    from future import standard_library
+ImportError: No module named future
+CMakeFiles/icarous.xml-v2.0.dir/build.make:62: recipe for target 'icarous-v2.0-cxx-stamp' failed
+make[2]: *** [icarous-v2.0-cxx-stamp] Error 1
+CMakeFiles/Makefile2:160: recipe for target 'CMakeFiles/icarous.xml-v2.0.dir/all' failed
+make[1]: *** [CMakeFiles/icarous.xml-v2.0.dir/all] Error 2
+CMakeFiles/matrixpilot.xml-v2.0.dir/build.make:62: recipe for target 'matrixpilot-v2.0-cxx-stamp' failed
+make[2]: *** [matrixpilot-v2.0-cxx-stamp] Error 1
+CMakeFiles/ardupilotmega.xml-v2.0.dir/build.make:62: recipe for target 'ardupilotmega-v2.0-cxx-stamp' failed
+make[2]: *** [ardupilotmega-v2.0-cxx-stamp] Error 1
+CMakeFiles/Makefile2:128: recipe for target 'CMakeFiles/matrixpilot.xml-v2.0.dir/all' failed
+CMakeFiles/Makefile2:256: recipe for target 'CMakeFiles/ardupilotmega.xml-v2.0.dir/all' failed
+make[1]: *** [CMakeFiles/matrixpilot.xml-v2.0.dir/all] Error 2
+make[1]: *** [CMakeFiles/ardupilotmega.xml-v2.0.dir/all] Error 2
+CMakeFiles/ualberta.xml-v2.0.dir/build.make:62: recipe for target 'ualberta-v2.0-cxx-stamp' failed
+make[2]: *** [ualberta-v2.0-cxx-stamp] Error 1
+CMakeFiles/Makefile2:320: recipe for target 'CMakeFiles/ualberta.xml-v2.0.dir/all' failed
+make[1]: *** [CMakeFiles/ualberta.xml-v2.0.dir/all] Error 2
+CMakeFiles/ASLUAV.xml-v1.0.dir/build.make:62: recipe for target 'include/v1.0/ASLUAV/ASLUAV.h' failed
+make[2]: *** [include/v1.0/ASLUAV/ASLUAV.h] Error 1
+CMakeFiles/Makefile2:288: recipe for target 'CMakeFiles/ASLUAV.xml-v1.0.dir/all' failed
+make[1]: *** [CMakeFiles/ASLUAV.xml-v1.0.dir/all] Error 2
+Traceback (most recent call last):
+  File "/home/cheng/fault_tolerant_control/src/mavlink/pymavlink/tools/mavgen.py", line 16, in <module>
+    from pymavlink.generator import mavgen
+  File "/home/cheng/fault_tolerant_control/src/mavlink/pymavlink/generator/mavgen.py", line 26, in <module>
+    from future import standard_library
+ImportError: No module named future
+Traceback (most recent call last):
+  File "/home/cheng/fault_tolerant_control/src/mavlink/pymavlink/tools/mavgen.py", line 16, in <module>
+    from pymavlink.generator import mavgen
+  File "/home/cheng/fault_tolerant_control/src/mavlink/pymavlink/generator/mavgen.py", line 26, in <module>
+    from future import standard_library
+ImportError: No module named future
+CMakeFiles/standard.xml-v2.0.dir/build.make:62: recipe for target 'standard-v2.0-cxx-stamp' failed
+make[2]: *** [standard-v2.0-cxx-stamp] Error 1
+make[1]: *** [CMakeFiles/standard.xml-v2.0.dir/all] Error 2
+CMakeFiles/Makefile2:352: recipe for target 'CMakeFiles/standard.xml-v2.0.dir/all' failed
+CMakeFiles/ardupilotmega.xml-v1.0.dir/build.make:62: recipe for target 'include/v1.0/ardupilotmega/ardupilotmega.h' failed
+make[2]: *** [include/v1.0/ardupilotmega/ardupilotmega.h] Error 1
+CMakeFiles/Makefile2:384: recipe for target 'CMakeFiles/ardupilotmega.xml-v1.0.dir/all' failed
+make[1]: *** [CMakeFiles/ardupilotmega.xml-v1.0.dir/all] Error 2
+Makefile:117: recipe for target 'all' failed
+make: *** [all] Error 2

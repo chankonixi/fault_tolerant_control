@@ -452,32 +452,26 @@ namespace ftc {
     motor_command_msg_.thrust = thrust_design;
 
     Eigen::Vector3d omega_dot_design(0.0,0.0,0.0);
-    double kph_the_, kdh_the_, kih_the_, kph_phi_, kdh_phi_, kih_phi_;  
+    double kph, kdh, kih;  
     if (!failure_mode_) {
-      kph_the_ = K_att_the_[0];
-      kdh_the_ = K_att_the_[1];
-      kih_the_ = K_att_the_[2];
-      kph_phi_ = K_att_phi_[0];
-      kdh_phi_ = K_att_phi_[1];
-      kih_phi_ = K_att_phi_[2];
+      kph = K_att_[0];
+      kdh = K_att_[1];
+      kih = K_att_[2];
     }
     else {
-      kph_the_ = K_att_fail_[0];
-      kdh_the_ = K_att_fail_[1];
-      kih_the_ = K_att_fail_[2];
-      kph_phi_ = K_att_fail_[0];
-      kdh_phi_ = K_att_fail_[1];
-      kih_phi_ = K_att_fail_[2];
+      kph = K_att_fail_[0];
+      kdh = K_att_fail_[1];
+      kih = K_att_fail_[2];
     }
 
-    omega_dot_design(0) = (kph_the_ * (n_b_(1) - n_des_b(1)) 
-          + kdh_the_ * ( n_des_b(0) * state_.bodyrates.z() -  n_des_b(2) * state_.bodyrates.x())
-          + kih_the_ * nb_err_int_(1)
+    omega_dot_design(0) = (kph * (n_b_(1) - n_des_b(1)) 
+          + kdh * ( n_des_b(0) * state_.bodyrates.z() -  n_des_b(2) * state_.bodyrates.x())
+          + kih * nb_err_int_(1)
           - (n_des_b(2) * state_.bodyrates.y() - n_des_b(1) * state_.bodyrates.z()) * state_.bodyrates.z()) / ( n_des_b(2));
 
-    omega_dot_design(1) = (kph_phi_ * (n_b_(0) - n_des_b(0)) 
-          + kdh_phi_ * (-n_des_b(1) * state_.bodyrates.z() +  n_des_b(2) * state_.bodyrates.y())
-          + kih_phi_ * nb_err_int_(0)
+    omega_dot_design(1) = (kph * (n_b_(0) - n_des_b(0)) 
+          + kdh * (-n_des_b(1) * state_.bodyrates.z() +  n_des_b(2) * state_.bodyrates.y())
+          + kih * nb_err_int_(0)
           + (n_des_b(0) * state_.bodyrates.z() - n_des_b(2) * state_.bodyrates.x()) * state_.bodyrates.z()) / (-n_des_b(2));
 
     // In the nominal condition, switch on the yaw controller
@@ -541,8 +535,7 @@ namespace ftc {
     check &= pnh_.getParam("kp_pos", Kp_pos_vec_);
     check &= pnh_.getParam("kd_pos", Kd_pos_vec_);
     check &= pnh_.getParam("ki_pos", Ki_pos_vec_);
-    check &= pnh_.getParam("k_att_the", K_att_the_);
-    check &= pnh_.getParam("k_att_phi", K_att_phi_);
+    check &= pnh_.getParam("k_att", K_att_);
     check &= pnh_.getParam("k_yaw", K_yaw_);
     check &= pnh_.getParam("kp_pos_fail", Kp_pos_vec_fail_);
     check &= pnh_.getParam("kd_pos_fail", Kd_pos_vec_fail_);

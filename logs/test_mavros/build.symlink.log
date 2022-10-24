@@ -1,5 +1,5 @@
+Symlinking /home/cheng/fault_tolerant_control/devel/lib/libmavros_sitl_test.so
+Symlinking /home/cheng/fault_tolerant_control/devel/lib/pkgconfig/test_mavros.pc
+Symlinking /home/cheng/fault_tolerant_control/devel/lib/test_mavros/sitl_test_node
 Symlinking /home/cheng/fault_tolerant_control/devel/share/test_mavros/cmake/test_mavrosConfig-version.cmake
 Symlinking /home/cheng/fault_tolerant_control/devel/share/test_mavros/cmake/test_mavrosConfig.cmake
-Symlinking /home/cheng/fault_tolerant_control/devel/lib/libmavros_sitl_test.so
-Symlinking /home/cheng/fault_tolerant_control/devel/lib/test_mavros/sitl_test_node
-Symlinking /home/cheng/fault_tolerant_control/devel/lib/pkgconfig/test_mavros.pc

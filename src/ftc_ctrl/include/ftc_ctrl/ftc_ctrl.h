@@ -126,7 +126,7 @@ namespace ftc
     double time_fail_;
     double heading_target_;
     
-    std::vector<double> Kp_pos_vec_, Kd_pos_vec_, Ki_pos_vec_, K_att_the_, K_att_phi_;
+    std::vector<double> Kp_pos_vec_, Kd_pos_vec_, Ki_pos_vec_, K_att_;
     std::vector<double> Kp_pos_vec_fail_, Kd_pos_vec_fail_, Ki_pos_vec_fail_, K_att_fail_;
     std::vector<double> K_yaw_;
 
