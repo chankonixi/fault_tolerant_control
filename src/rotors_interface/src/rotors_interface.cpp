@@ -48,8 +48,12 @@ RotorSInterface::RotorSInterface
 
     rotors_odometry_sub_ = nh_.subscribe(
         "ground_truth/odometry", 1, &RotorSInterface::rotorsOdometryCallback, this);  
-    rotors_gazebo_odometry_sub_ = nh_.subscribe(
-        "/uav1/mavros/local_position/odom", 1, &RotorSInterface::rotorsgazeboOdometryCallback, this);     
+    // rotors_gazebo_odometry_sub_ = nh_.subscribe(
+    //     "/uav1/mavros/local_position/odom", 1, &RotorSInterface::rotorsgazeboOdometryCallback, this);     
+    rotors_vrpn_pose_sub_ = nh_.subscribe(
+        "/vrpn_client_node/uav1/pose", 1, &RotorSInterface::rotorsVrpnPoseCallback, this); 
+    rotors_vrpn_twist_sub_ = nh_.subscribe(
+        "/vrpn_client_node/uav1/twist", 1, &RotorSInterface::rotorsVrpnTwistCallback, this); 
     motor_command_sub_ = nh_.subscribe(
         "control_command", 1, &RotorSInterface::ftcMotorCommandCallback, this);  
 
@@ -141,6 +145,51 @@ void RotorSInterface::rotorsgazeboOdometryCallback(
 /*state_set话题发布的内容*/
   state_est_pub_.publish(msg_pub);
 
+  return;
+}
+
+void RotorSInterface::rotorsVrpnPoseCallback(
+    const geometry_msgs::PoseStamped::ConstPtr& msg)
+{
+
+  vrpn_msg_pub.header = msg->header;
+  vrpn_msg_pub.position.x    = msg->pose.position.x;
+  vrpn_msg_pub.position.y    = msg->pose.position.y;
+  vrpn_msg_pub.position.z    = msg->pose.position.z;
+  vrpn_msg_pub.orientation.w = msg->pose.orientation.w;  
+  vrpn_msg_pub.orientation.x = msg->pose.orientation.x;
+  vrpn_msg_pub.orientation.y = msg->pose.orientation.y;
+  vrpn_msg_pub.orientation.z = msg->pose.orientation.z;
+  return;
+}
+
+void RotorSInterface::rotorsVrpnTwistCallback(
+    const geometry_msgs::TwistStamped::ConstPtr& msg)
+{
+  vrpn_msg_pub.header = msg->header;
+
+  Eigen::Vector3d Vb = (Eigen::Vector3d() 
+                    << msg->twist.linear.x, 
+                        msg->twist.linear.y, 
+                        msg->twist.linear.z
+                        ).finished(); 
+  Eigen::Quaterniond q;
+  q.w() = vrpn_msg_pub.orientation.w; 
+  q.x() = vrpn_msg_pub.orientation.x;
+  q.y() = vrpn_msg_pub.orientation.y;
+  q.z() = vrpn_msg_pub.orientation.z;
+
+/*问题：Vi转化的含义是什么，*/
+  Eigen::Vector3d Vi = q * Vb;
+  vrpn_msg_pub.velocity.x    = Vi(0);
+  vrpn_msg_pub.velocity.y    = Vi(1);
+  vrpn_msg_pub.velocity.z    = Vi(2);
+  vrpn_msg_pub.bodyrates.x   = msg->twist.angular.x;
+  vrpn_msg_pub.bodyrates.y   = msg->twist.angular.y;
+  vrpn_msg_pub.bodyrates.z   = msg->twist.angular.z;
+
+/*state_set话题发布的内容*/
+  state_est_pub_.publish(vrpn_msg_pub);
   return;
 }
 

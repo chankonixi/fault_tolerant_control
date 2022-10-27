@@ -1,0 +1,16 @@
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:[m[K In member function ‘[01m[Kvoid rotors_interface::RotorSInterface::rotorsVrpnTwistCallback(const ConstPtr&)[m[K’:
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:177:16:[m[K [01;31m[Kerror: [m[K‘[01m[Kconst struct geometry_msgs::TwistStamped_<std::allocator<void> >[m[K’ has no member named ‘[01m[Kpose[m[K’
+   q.w() = msg->[01;31m[Kpose[m[K.orientation.w;
+                [01;31m[K^~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:178:16:[m[K [01;31m[Kerror: [m[K‘[01m[Kconst struct geometry_msgs::TwistStamped_<std::allocator<void> >[m[K’ has no member named ‘[01m[Kpose[m[K’
+   q.x() = msg->[01;31m[Kpose[m[K.orientation.x;
+                [01;31m[K^~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:179:16:[m[K [01;31m[Kerror: [m[K‘[01m[Kconst struct geometry_msgs::TwistStamped_<std::allocator<void> >[m[K’ has no member named ‘[01m[Kpose[m[K’
+   q.y() = msg->[01;31m[Kpose[m[K.orientation.y;
+                [01;31m[K^~~~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface.cpp:180:16:[m[K [01;31m[Kerror: [m[K‘[01m[Kconst struct geometry_msgs::TwistStamped_<std::allocator<void> >[m[K’ has no member named ‘[01m[Kpose[m[K’
+   q.z() = msg->[01;31m[Kpose[m[K.orientation.z;
+                [01;31m[K^~~~[m[K
+make[2]: *** [CMakeFiles/rotors_interface.dir/src/rotors_interface.cpp.o] Error 1
+make[1]: *** [CMakeFiles/rotors_interface.dir/all] Error 2
+make: *** [all] Error 2

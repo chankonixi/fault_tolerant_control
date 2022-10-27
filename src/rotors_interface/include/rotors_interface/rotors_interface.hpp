@@ -27,7 +27,8 @@
 #include "std_msgs/Bool.h"
 #include <Eigen/Eigen>
 #include "geometry_msgs/Point.h"
-
+#include "geometry_msgs/PoseStamped.h"
+#include "geometry_msgs/TwistStamped.h"
 
 
 namespace rotors_interface
@@ -47,6 +48,8 @@ namespace rotors_interface
             ros::Publisher  state_est_pub_;
             ros::Subscriber rotors_odometry_sub_;
             ros::Subscriber rotors_gazebo_odometry_sub_;
+            ros::Subscriber rotors_vrpn_pose_sub_;
+            ros::Subscriber rotors_vrpn_twist_sub_;
             ros::Subscriber motor_command_sub_;
             
             double coeff1_, coeff2_, coeff3_;
@@ -55,6 +58,8 @@ namespace rotors_interface
             bool loadParams();
             void rotorsOdometryCallback(const nav_msgs::Odometry::ConstPtr& msg);
             void rotorsgazeboOdometryCallback(const nav_msgs::Odometry::ConstPtr& msg);
+            void rotorsVrpnPoseCallback(const geometry_msgs::PoseStamped::ConstPtr& msg);
+            void rotorsVrpnTwistCallback(const geometry_msgs::TwistStamped::ConstPtr& msg);
             void ftcMotorCommandCallback(const quad_msgs::ControlCommand::ConstPtr& msg);
 
             ros::Subscriber inner_design_sub_;//SYSUCODE
@@ -69,6 +74,8 @@ namespace rotors_interface
             geometry_msgs::Point pos_design_msg_;
             void controlUpdateCallback(const ros::TimerEvent&);
             ros::Subscriber start_rotors_sub_;
+
+            quad_msgs::QuadStateEstimate vrpn_msg_pub;
     };
 
 } // namespace rotors_interface
