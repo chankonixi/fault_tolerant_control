@@ -21,12 +21,12 @@ n_primary_axis: 0.3 # primary axis projection on xb-yb plane
 
 ############ Parameters ##################   
 # /*伪真机模型下的控制参数*/
-mass:           0.85    # quadrotor mass [kg]   
-Ix:             0.003   # Inertia Ix [kg m^2]       
-Iy:             0.0027  # Inertia Iy [kg m^2]      
-Iz:             0.006   # Inertia Iz [kg m^2]  
-lever_arm_x:  [0.08, -0.08 , 0.08, -0.08] #[m]
-lever_arm_y:  [-0.12 , 0.12, 0.12, -0.12] #[m]
+mass:           1.1122    # quadrotor mass [kg]   
+Ix:             0.004   # Inertia Ix [kg m^2]       
+Iy:             0.0046  # Inertia Iy [kg m^2]      
+Iz:             0.0072   # Inertia Iz [kg m^2]  
+lever_arm_x:  [0.078, -0.078 , 0.078, -0.078] #[m]
+lever_arm_y:  [-0.10 , 0.10, 0.10, -0.10] #[m]
 drag_coeff:   [0.01, 0.01, -0.01, -0.01] # rotor torque to thrust ratio [Nm / N]
 cg_bias:      [0.0, 0.0, 0.0] # center of mass displacement [m] 
 
