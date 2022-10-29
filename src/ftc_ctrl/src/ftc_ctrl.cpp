@@ -353,11 +353,11 @@ namespace ftc {
       integrator3(pos_err, pos_err_int_, 1.0/ctrl_rate_, max_pos_err_int_);
       a_des_ = Kp_pos * pos_err - Kd_pos * velocity_used + Ki_pos * pos_err_int_ - g_vect_;
 
-    ROS_INFO("pos_err: %f %f %f", pos_err(0), pos_err(1), pos_err(2));
-    ROS_INFO("vel_err: %f %f %f", velocity_used(0), velocity_used(1), velocity_used(2));
-    ROS_INFO("pos_err_int_: %f %f %f", pos_err_int_(0), pos_err_int_(1), pos_err_int_(2));
-    ROS_INFO("a_des_: %f %f %f", a_des_(0), a_des_(1), a_des_(2));
-    ROS_INFO("----------------------------------");
+    // ROS_INFO("pos_err: %f %f %f", pos_err(0), pos_err(1), pos_err(2));
+    // ROS_INFO("vel_err: %f %f %f", velocity_used(0), velocity_used(1), velocity_used(2));
+    // ROS_INFO("pos_err_int_: %f %f %f", pos_err_int_(0), pos_err_int_(1), pos_err_int_(2));
+    // ROS_INFO("a_des_: %f %f %f", a_des_(0), a_des_(1), a_des_(2));
+    // ROS_INFO("----------------------------------");
     }
 
     else {
@@ -375,11 +375,11 @@ namespace ftc {
 
       a_des_ = acc_des + Kd_pos * (vel_des - velocity_used) 
                 + Kp_pos * pos_err  + Ki_pos * pos_err_int_ - g_vect_;  
-    ROS_INFO("pos_err: %f %f %f", pos_err(0), pos_err(1), pos_err(2));
-    ROS_INFO("vel_err: %f %f %f", vel_des(0) - velocity_used(0), vel_des(1) - velocity_used(1), vel_des(2) - velocity_used(2));
-    ROS_INFO("pos_err_int_: %f %f %f", pos_err_int_(0), pos_err_int_(1), pos_err_int_(2));
-    ROS_INFO("a_des_: %f %f %f", a_des_(0), a_des_(1), a_des_(2));
-    ROS_INFO("----------------------------------");
+    // ROS_INFO("pos_err: %f %f %f", pos_err(0), pos_err(1), pos_err(2));
+    // ROS_INFO("vel_err: %f %f %f", vel_des(0) - velocity_used(0), vel_des(1) - velocity_used(1), vel_des(2) - velocity_used(2));
+    // ROS_INFO("pos_err_int_: %f %f %f", pos_err_int_(0), pos_err_int_(1), pos_err_int_(2));
+    // ROS_INFO("a_des_: %f %f %f", a_des_(0), a_des_(1), a_des_(2));
+    // ROS_INFO("----------------------------------");
     }
 
 
