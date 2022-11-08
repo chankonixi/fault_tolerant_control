@@ -41,7 +41,7 @@ RotorSInterface::RotorSInterface
     state_est_pub_ = nh_.advertise<quad_msgs::QuadStateEstimate>(
         "state_est", 1);
     rotor_control_pub_ = nh_.advertise<mavros_msgs::RotorControl>("rotor_control", 1000);   
-    reference_pub_ = nh_.advertise<geometry_msgs::Point>("reference_pos",1);//SYSU_CODE   
+    // reference_pub_ = nh_.advertise<geometry_msgs::Point>("reference_pos",1);//SYSU_CODE   
 
 /*订阅话题：订阅gazebo中的odometry；订阅容错控制器中control_command
 (问题：control_command是否为电机PWM控制信号，利用motorcommandcallback转化成电机转速并利用motor_speed话题发布出去，如果是转化函数是多少)*/
@@ -223,7 +223,7 @@ void RotorSInterface::looptrajectory()
         pos_design_msg_.x = 0.0;
         pos_design_msg_.y = 0.0;
         pos_design_msg_.z = 1/(1+exp(-time/2));
-        reference_pub_.publish(pos_design_msg_);
+        // reference_pub_.publish(pos_design_msg_);
         // ROS_INFO("pos_design_: %f %f %f",pos_design_msg_.x,pos_design_msg_.y,pos_design_msg_.z);
     }
     else 
