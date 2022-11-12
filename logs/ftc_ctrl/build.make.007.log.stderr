@@ -1,0 +1,13 @@
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:[m[K In member function ‘[01m[Kvoid ftc::NDICtrl::attitudeloopCallback(const Point&)[m[K’:
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:296:21:[m[K [01;31m[Kerror: [m[Kbase operand of ‘[01m[K->[m[K’ has non-pointer type ‘[01m[Kconst Point {aka const geometry_msgs::Point_<std::allocator<void> >}[m[K’
+     n_des_b(0) = msg[01;31m[K->[m[Kx;
+                     [01;31m[K^~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:297:21:[m[K [01;31m[Kerror: [m[Kbase operand of ‘[01m[K->[m[K’ has non-pointer type ‘[01m[Kconst Point {aka const geometry_msgs::Point_<std::allocator<void> >}[m[K’
+     n_des_b(1) = msg[01;31m[K->[m[Ky;
+                     [01;31m[K^~[m[K
+[01m[K/home/cheng/fault_tolerant_control/src/ftc_ctrl/src/ftc_ctrl.cpp:298:21:[m[K [01;31m[Kerror: [m[Kbase operand of ‘[01m[K->[m[K’ has non-pointer type ‘[01m[Kconst Point {aka const geometry_msgs::Point_<std::allocator<void> >}[m[K’
+     n_des_b(2) = msg[01;31m[K->[m[Kz;
+                     [01;31m[K^~[m[K
+make[2]: *** [CMakeFiles/ftc_ctrl.dir/src/ftc_ctrl.cpp.o] Error 1
+make[1]: *** [CMakeFiles/ftc_ctrl.dir/all] Error 2
+make: *** [all] Error 2

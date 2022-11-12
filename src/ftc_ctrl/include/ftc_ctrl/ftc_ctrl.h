@@ -169,7 +169,9 @@ namespace ftc
     void sigmoidTraj(const double pos_end, const double pos_begin,
                            double& pos_des, double& vel_des, double& acc_des, double time);
 
-
+    void attitudeloopCallback(const geometry_msgs::PointConstPtr& msg);
+    ros::Subscriber attitude_sub_;
+    Eigen::Vector3d n_des_b;
   };
 
 } // namespace ftc

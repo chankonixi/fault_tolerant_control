@@ -48,6 +48,7 @@ namespace ftc {
     reference_sub_    = nh_.subscribe("reference_pos", 1, &NDICtrl::referenceUpdateCallback, this );
     yaw_rate_sub_     = nh_.subscribe("heading_design", 1, &NDICtrl::headingCallback, this );
     joy_sub_          = nh_.subscribe("joy", 1, &NDICtrl::joyCallback, this );
+    attitude_sub_     = nh_.subscribe("reference_att", 1, &NDICtrl::attitudeloopCallback, this );
 
     motor_command_pub_ = nh_.advertise<quad_msgs::ControlCommand>("control_command", 1); 
     arm_pub_      = nh_.advertise<std_msgs::Bool>("control_active", 1);
@@ -240,11 +241,11 @@ namespace ftc {
     if (armed_out_.data && estimation_received_) //经过startrotor函数和stateupdate函数后两个条件都满足
     {
       arm_pub_.publish(armed_out_);//只有当armed_out和estimation_received同时为true时才会pub
-      // ROS_INFO("estimation received");
+      ROS_INFO("estimation received");
     }
     else //否则直接return
     {
-      // ROS_WARN("estimation do not received %d %d", armed_out_.data, estimation_received_);
+      ROS_WARN("estimation do not received %d %d", armed_out_.data, estimation_received_);
       return;
     }
 
@@ -252,7 +253,7 @@ namespace ftc {
       std_msgs::Empty emsg;
       kill_pub_.publish(emsg);
     }
-    controller_outerloop();
+    //controller_outerloop();
     controller_innerloop();
     sendMotorCommand();
 
@@ -288,6 +289,14 @@ namespace ftc {
     // ROS_INFO("motor_command_pub!");
      motor_command_pub_.publish(motor_command_msg_);//发布旋翼控制信息
 
+    return;
+  }
+
+  void NDICtrl::attitudeloopCallback(const geometry_msgs::PointConstPtr& msg){
+    n_des_b(0) = msg->x;
+    n_des_b(1) = msg->y;
+    n_des_b(2) = msg->z;
+    // ROS_INFO("n_des_b: %f %f %f", n_des_b(0), n_des_b(1), n_des_b(2));
     return;
   }
 
@@ -346,18 +355,11 @@ namespace ftc {
     if(!referenceUpdated_)
       time = 0.0;
 
-    // ROS_INFO("pos_design_: %f %f %f", pos_design_(0), pos_design_(1), pos_design_(2));
 
     if (!sigmoid_traj_ || (time<0)) {
       Eigen::Vector3d pos_err = (pos_design_ - position_used);
       integrator3(pos_err, pos_err_int_, 1.0/ctrl_rate_, max_pos_err_int_);
       a_des_ = Kp_pos * pos_err - Kd_pos * velocity_used + Ki_pos * pos_err_int_ - g_vect_;
-
-    ROS_INFO("pos_err: %f %f %f", pos_err(0), pos_err(1), pos_err(2));
-    ROS_INFO("vel_err: %f %f %f", velocity_used(0), velocity_used(1), velocity_used(2));
-    ROS_INFO("pos_err_int_: %f %f %f", pos_err_int_(0), pos_err_int_(1), pos_err_int_(2));
-    ROS_INFO("a_des_: %f %f %f", a_des_(0), a_des_(1), a_des_(2));
-    ROS_INFO("----------------------------------");
     }
 
     else {
@@ -375,11 +377,6 @@ namespace ftc {
 
       a_des_ = acc_des + Kd_pos * (vel_des - velocity_used) 
                 + Kp_pos * pos_err  + Ki_pos * pos_err_int_ - g_vect_;  
-    ROS_INFO("pos_err: %f %f %f", pos_err(0), pos_err(1), pos_err(2));
-    ROS_INFO("vel_err: %f %f %f", vel_des(0) - velocity_used(0), vel_des(1) - velocity_used(1), vel_des(2) - velocity_used(2));
-    ROS_INFO("pos_err_int_: %f %f %f", pos_err_int_(0), pos_err_int_(1), pos_err_int_(2));
-    ROS_INFO("a_des_: %f %f %f", a_des_(0), a_des_(1), a_des_(2));
-    ROS_INFO("----------------------------------");
     }
 
 
@@ -426,8 +423,8 @@ namespace ftc {
     else
       n_b_ << nx_b_, ny_b_, sqrt(1 - nx_b_*nx_b_ - ny_b_*ny_b_);//机体系坐标
 
-    Eigen::Vector3d n_des_i  = a_des_ / a_des_.norm();
-    Eigen::Vector3d n_des_b = state_.orientation.inverse() * n_des_i;
+    //Eigen::Vector3d n_des_i  = a_des_ / a_des_.norm();
+    //Eigen::Vector3d n_des_b = state_.orientation.inverse() * n_des_i;
     // ROS_INFO("n_des_b: %f %f %f", n_des_b(0), n_des_b(1), n_des_b(2));
     
     Eigen::Vector3d z_body = state_.orientation.inverse() * Eigen::Vector3d::UnitZ();
@@ -440,7 +437,6 @@ namespace ftc {
     // reduced attitude controller
     Eigen::Vector2d nu_out;
     Eigen::Vector3d nb_err = n_b_ - n_des_b;
-    // ROS_INFO("nb_err: %f %f %f", nb_err(0), nb_err(1), nb_err(2));
 
     if(!referenceUpdated_) {
       // Reset all integral terms once take-off command is sent

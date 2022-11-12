@@ -1,28 +1,28 @@
 
 "use strict";
 
+let QuadStateEstimate = require('./QuadStateEstimate.js');
 let ControlCommand = require('./ControlCommand.js');
+let OnboardParameter = require('./OnboardParameter.js');
 let OnboardStatus = require('./OnboardStatus.js');
 let QuadDesiredState = require('./QuadDesiredState.js');
-let QuadRotorThrusts = require('./QuadRotorThrusts.js');
+let QuadReferenceCommand = require('./QuadReferenceCommand.js');
 let QuadGpioPwmCtrl = require('./QuadGpioPwmCtrl.js');
-let QuadStateEstimate = require('./QuadStateEstimate.js');
+let QuadRotorThrusts = require('./QuadRotorThrusts.js');
+let QuadDesiredTorquesAndThrust = require('./QuadDesiredTorquesAndThrust.js');
 let ControllerFeedback = require('./ControllerFeedback.js');
 let Px4Timesync = require('./Px4Timesync.js');
-let QuadReferenceCommand = require('./QuadReferenceCommand.js');
-let OnboardParameter = require('./OnboardParameter.js');
-let QuadDesiredTorquesAndThrust = require('./QuadDesiredTorquesAndThrust.js');
 
 module.exports = {
+  QuadStateEstimate: QuadStateEstimate,
   ControlCommand: ControlCommand,
+  OnboardParameter: OnboardParameter,
   OnboardStatus: OnboardStatus,
   QuadDesiredState: QuadDesiredState,
-  QuadRotorThrusts: QuadRotorThrusts,
+  QuadReferenceCommand: QuadReferenceCommand,
   QuadGpioPwmCtrl: QuadGpioPwmCtrl,
-  QuadStateEstimate: QuadStateEstimate,
+  QuadRotorThrusts: QuadRotorThrusts,
+  QuadDesiredTorquesAndThrust: QuadDesiredTorquesAndThrust,
   ControllerFeedback: ControllerFeedback,
   Px4Timesync: Px4Timesync,
-  QuadReferenceCommand: QuadReferenceCommand,
-  OnboardParameter: OnboardParameter,
-  QuadDesiredTorquesAndThrust: QuadDesiredTorquesAndThrust,
 };

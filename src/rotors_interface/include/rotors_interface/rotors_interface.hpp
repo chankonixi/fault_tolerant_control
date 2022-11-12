@@ -76,6 +76,9 @@ namespace rotors_interface
             ros::Subscriber start_rotors_sub_;
 
             quad_msgs::QuadStateEstimate vrpn_msg_pub;
+            void loopattitude();
+            ros::Publisher  attitude_pub_;
+            geometry_msgs::Point att_design_msg_;
     };
 
 } // namespace rotors_interface

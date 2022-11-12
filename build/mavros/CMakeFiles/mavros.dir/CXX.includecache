@@ -1755,7 +1755,7 @@ string
 -
 vector
 -
-map
+memory
 -
 ros/types.h
 -
@@ -1968,20 +1968,6 @@ mavros/utils.h
 ros/console.h
 -
 
-/home/cheng/fault_tolerant_control/src/mavros/mavros/src/lib/ftf_frame_conversions.cpp
-mavros/frame_tf.h
--
-stdexcept
--
-
-/home/cheng/fault_tolerant_control/src/mavros/mavros/src/lib/ftf_quaternion_utils.cpp
-mavros/frame_tf.h
--
-
-/home/cheng/fault_tolerant_control/src/mavros/mavros/src/lib/mavlink_diag.cpp
-mavros/mavlink_diag.h
--
-
 /home/cheng/fault_tolerant_control/src/mavros/mavros/src/lib/mavros.cpp
 ros/console.h
 -
@@ -1998,10 +1984,6 @@ mavconn/mavlink_dialect.h
 mavconn/udp.h
 -
 std_msgs/String.h
--
-
-/home/cheng/fault_tolerant_control/src/mavros/mavros/src/lib/rosconsole_bridge.cpp
-rosconsole_bridge/bridge.h
 -
 
 /home/cheng/fault_tolerant_control/src/mavros/mavros/src/lib/uas_data.cpp
@@ -3193,12 +3175,6 @@ ros/forwards.h
 /opt/ros/melodic/include/ros/ros/forwards.h
 
 /opt/ros/melodic/include/rosconsole/macros_generated.h
-
-/opt/ros/melodic/include/rosconsole_bridge/bridge.h
-ros/macros.h
--
-console_bridge/console.h
--
 
 /opt/ros/melodic/include/sensor_msgs/Imu.h
 string
