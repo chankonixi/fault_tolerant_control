@@ -126,6 +126,10 @@ stdlib.h
 Eigen/Eigen
 -
 
+/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface_node.cpp
+rotors_interface/rotors_interface.hpp
+/home/cheng/fault_tolerant_control/src/rotors_interface/src/rotors_interface/rotors_interface.hpp
+
 /opt/ros/melodic/include/geometry_msgs/Point.h
 string
 -

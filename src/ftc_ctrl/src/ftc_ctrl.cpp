@@ -346,18 +346,10 @@ namespace ftc {
     if(!referenceUpdated_)
       time = 0.0;
 
-    // ROS_INFO("pos_design_: %f %f %f", pos_design_(0), pos_design_(1), pos_design_(2));
-
     if (!sigmoid_traj_ || (time<0)) {
       Eigen::Vector3d pos_err = (pos_design_ - position_used);
       integrator3(pos_err, pos_err_int_, 1.0/ctrl_rate_, max_pos_err_int_);
       a_des_ = Kp_pos * pos_err - Kd_pos * velocity_used + Ki_pos * pos_err_int_ - g_vect_;
-
-    // ROS_INFO("pos_err: %f %f %f", pos_err(0), pos_err(1), pos_err(2));
-    // ROS_INFO("vel_err: %f %f %f", velocity_used(0), velocity_used(1), velocity_used(2));
-    // ROS_INFO("pos_err_int_: %f %f %f", pos_err_int_(0), pos_err_int_(1), pos_err_int_(2));
-    // ROS_INFO("a_des_: %f %f %f", a_des_(0), a_des_(1), a_des_(2));
-    // ROS_INFO("----------------------------------");
     }
 
     else {
@@ -375,11 +367,6 @@ namespace ftc {
 
       a_des_ = acc_des + Kd_pos * (vel_des - velocity_used) 
                 + Kp_pos * pos_err  + Ki_pos * pos_err_int_ - g_vect_;  
-    // ROS_INFO("pos_err: %f %f %f", pos_err(0), pos_err(1), pos_err(2));
-    // ROS_INFO("vel_err: %f %f %f", vel_des(0) - velocity_used(0), vel_des(1) - velocity_used(1), vel_des(2) - velocity_used(2));
-    // ROS_INFO("pos_err_int_: %f %f %f", pos_err_int_(0), pos_err_int_(1), pos_err_int_(2));
-    // ROS_INFO("a_des_: %f %f %f", a_des_(0), a_des_(1), a_des_(2));
-    // ROS_INFO("----------------------------------");
     }
 
 
@@ -428,7 +415,11 @@ namespace ftc {
 
     Eigen::Vector3d n_des_i  = a_des_ / a_des_.norm();
     Eigen::Vector3d n_des_b = state_.orientation.inverse() * n_des_i;
-    // ROS_INFO("n_des_b: %f %f %f", n_des_b(0), n_des_b(1), n_des_b(2));
+    ROS_INFO("a_des_: %f %f %f", a_des_(0), a_des_(1), a_des_(2));
+    ROS_INFO("n_des_b: %f %f %f", n_des_b(0), n_des_b(1), n_des_b(2));
+    // ROS_INFO("n_des_i: %f %f %f", n_des_i(0), n_des_i(1), n_des_i(2));
+    // ROS_INFO("inverse: %f %f %f %f", state_.orientation.inverse().x(), state_.orientation.inverse().y(), 
+    //           state_.orientation.inverse().z(), state_.orientation.inverse().w());
     
     Eigen::Vector3d z_body = state_.orientation.inverse() * Eigen::Vector3d::UnitZ();
     z_body = z_body/z_body.norm()  ;
@@ -440,7 +431,6 @@ namespace ftc {
     // reduced attitude controller
     Eigen::Vector2d nu_out;
     Eigen::Vector3d nb_err = n_b_ - n_des_b;
-    // ROS_INFO("nb_err: %f %f %f", nb_err(0), nb_err(1), nb_err(2));
 
     if(!referenceUpdated_) {
       // Reset all integral terms once take-off command is sent
