@@ -241,11 +241,11 @@ namespace ftc {
     if (armed_out_.data && estimation_received_) //经过startrotor函数和stateupdate函数后两个条件都满足
     {
       arm_pub_.publish(armed_out_);//只有当armed_out和estimation_received同时为true时才会pub
-      ROS_INFO("estimation received");
+      // ROS_INFO("estimation received");
     }
     else //否则直接return
     {
-      ROS_WARN("estimation do not received %d %d", armed_out_.data, estimation_received_);
+      // ROS_WARN("estimation do not received %d %d", armed_out_.data, estimation_received_);
       return;
     }
 
@@ -293,9 +293,9 @@ namespace ftc {
   }
 
   void NDICtrl::attitudeloopCallback(const geometry_msgs::PointConstPtr& msg){
-    n_des_b(0) = msg->x;
-    n_des_b(1) = msg->y;
-    n_des_b(2) = msg->z;
+    n_b_(0) = msg->x;
+    n_b_(1) = msg->y;
+    n_b_(2) = msg->z;
     // ROS_INFO("n_des_b: %f %f %f", n_des_b(0), n_des_b(1), n_des_b(2));
     return;
   }
@@ -417,26 +417,28 @@ namespace ftc {
   void NDICtrl::controller_innerloop()  { 
 
     // change nb after failure happens. Keep it unchanged at the 1st second.
-    time_now_ = ros::Time::now().toNSec();
-    if ((time_now_ - time_fail_) <= 1.0*1e9)
-      n_b_ << 0.0, 0.0, 1.0;
-    else
-      n_b_ << nx_b_, ny_b_, sqrt(1 - nx_b_*nx_b_ - ny_b_*ny_b_);//机体系坐标
+    // time_now_ = ros::Time::now().toNSec();
+    // if ((time_now_ - time_fail_) <= 1.0*1e9)
+    //   n_b_ << 0.0, 0.0, 1.0;
+    // else
+    //   n_b_ << nx_b_, ny_b_, sqrt(1 - nx_b_*nx_b_ - ny_b_*ny_b_);//机体系坐标
 
     //Eigen::Vector3d n_des_i  = a_des_ / a_des_.norm();
     //Eigen::Vector3d n_des_b = state_.orientation.inverse() * n_des_i;
     // ROS_INFO("n_des_b: %f %f %f", n_des_b(0), n_des_b(1), n_des_b(2));
+    quaterniontoeulerangles();
     
     Eigen::Vector3d z_body = state_.orientation.inverse() * Eigen::Vector3d::UnitZ();
-    z_body = z_body/z_body.norm()  ;
+    z_body = z_body/z_body.norm();
     double theta = std::acos(((-g_vect_).dot(z_body))/g_);
     double theta_1 = 1.00; // deg2rad(60)
     double thrust_design(0.0);
-    thrust_design = (m_*a_des_(2))/cos(std::min(theta,theta_1));
+    thrust_design = (m_*g_)/cos(std::min(theta,theta_1));
 
     // reduced attitude controller
     Eigen::Vector2d nu_out;
     Eigen::Vector3d nb_err = n_b_ - n_des_b;
+    ROS_INFO("nb_err: %f %f %f", nb_err(0), nb_err(1), nb_err(2));
 
     if(!referenceUpdated_) {
       // Reset all integral terms once take-off command is sent
@@ -595,6 +597,27 @@ namespace ftc {
               + (2*a*c*c*exp(-3*c*(b - time)))/(exp(-c*(b - time)) + 1)/(exp(-c*(b - time)) + 1)/(exp(-c*(b - time)) + 1);
 
     return;
+  }
+
+  void NDICtrl::quaterniontoeulerangles(){
+    double sinr_cosp = 2 * (state_.orientation.w() * state_.orientation.x() + state_.orientation.y() * state_.orientation.z());
+    double cosr_cosp = 1 - 2 * (state_.orientation.x() * state_.orientation.x() + state_.orientation.y() * state_.orientation.y());
+    n_eular(0) = std::atan2(sinr_cosp, cosr_cosp);
+ 
+    // pitch (y-axis rotation)
+    double sinp = 2 * (state_.orientation.w() * state_.orientation.y() - state_.orientation.z() * state_.orientation.x());
+    if (std::abs(sinp) >= 1)
+        n_eular(1) = std::copysign(M_PI / 2, sinp); // use 90 degrees if out of range
+    else
+        n_eular(1) = std::asin(sinp);
+ 
+    // yaw (z-axis rotation)
+    double siny_cosp = 2 * (state_.orientation.w() * state_.orientation.z() + state_.orientation.x() * state_.orientation.y());
+    double cosy_cosp = 1 - 2 * (state_.orientation.y() * state_.orientation.y() + state_.orientation.z() * state_.orientation.z());
+    n_eular(2) = std::atan2(siny_cosp, cosy_cosp);
+    n_des_b(0) = cos(n_eular(2))*sin(n_eular(1))*cos(n_eular(0))+sin(n_eular(2))*sin(n_eular(0));
+    n_des_b(1) = sin(n_eular(2))*sin(n_eular(1))*cos(n_eular(0))-sin(n_eular(2))*cos(n_eular(0));
+    n_des_b(2) = cos(n_eular(1))*cos(n_eular(0));
   }
 
 } //namespace ftc

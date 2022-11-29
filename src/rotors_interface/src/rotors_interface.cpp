@@ -49,12 +49,12 @@ RotorSInterface::RotorSInterface
 
     rotors_odometry_sub_ = nh_.subscribe(
         "ground_truth/odometry", 1, &RotorSInterface::rotorsOdometryCallback, this);  
-    // rotors_gazebo_odometry_sub_ = nh_.subscribe(
-    //     "/uav1/mavros/local_position/odom", 1, &RotorSInterface::rotorsgazeboOdometryCallback, this);     
-    rotors_vrpn_pose_sub_ = nh_.subscribe(
-        "/vrpn_client_node/uav1/pose", 1, &RotorSInterface::rotorsVrpnPoseCallback, this); 
-    rotors_vrpn_twist_sub_ = nh_.subscribe(
-        "/vrpn_client_node/uav1/twist", 1, &RotorSInterface::rotorsVrpnTwistCallback, this); 
+    rotors_gazebo_odometry_sub_ = nh_.subscribe(
+        "/uav1/mavros/local_position/odom", 1, &RotorSInterface::rotorsgazeboOdometryCallback, this);     
+    // rotors_vrpn_pose_sub_ = nh_.subscribe(
+    //     "/vrpn_client_node/uav1/pose", 1, &RotorSInterface::rotorsVrpnPoseCallback, this); 
+    // rotors_vrpn_twist_sub_ = nh_.subscribe(
+    //     "/vrpn_client_node/uav1/twist", 1, &RotorSInterface::rotorsVrpnTwistCallback, this); 
     motor_command_sub_ = nh_.subscribe(
         "control_command", 1, &RotorSInterface::ftcMotorCommandCallback, this);  
 
@@ -286,9 +286,9 @@ void RotorSInterface::loopattitude()
     if (armed_out_.data) 
     {
         double time = ros::Time::now().toSec() - time_traj_received_;
-        att_design_msg_.x = 0.1*sin(time);
-        att_design_msg_.y = 0.1*cos(time);
-        att_design_msg_.z = 0.9;
+        att_design_msg_.x = 0.0;
+        att_design_msg_.y = 0.0;
+        att_design_msg_.z = 1.0;
         attitude_pub_.publish(att_design_msg_);
     }
     else 

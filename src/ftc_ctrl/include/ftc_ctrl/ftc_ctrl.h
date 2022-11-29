@@ -172,6 +172,8 @@ namespace ftc
     void attitudeloopCallback(const geometry_msgs::PointConstPtr& msg);
     ros::Subscriber attitude_sub_;
     Eigen::Vector3d n_des_b;
+    Eigen::Vector3d n_eular;
+    void quaterniontoeulerangles();
   };
 
 } // namespace ftc
