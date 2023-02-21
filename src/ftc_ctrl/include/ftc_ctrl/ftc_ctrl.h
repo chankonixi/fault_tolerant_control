@@ -34,6 +34,7 @@
 #include <Eigen/Eigen>
 #include "filter.h"
 #include <mavros_msgs/RotorControl.h>
+#include <sensor_msgs/Imu.h>
 
 
 #define PI 3.14159265
@@ -63,6 +64,7 @@ namespace ftc
     ros::NodeHandle nh_;
     ros::NodeHandle pnh_;
     ros::Subscriber state_est_sub_;
+    ros::Subscriber state_imu_sub_;//接收imu信息
     ros::Subscriber reference_sub_; 
     ros::Subscriber start_rotors_sub_;
     ros::Subscriber stop_rotors_sub_;
@@ -74,8 +76,16 @@ namespace ftc
     ros::Publisher arm_pub_;
     ros::Publisher kill_pub_;
 
-    ros::Publisher inner_design_pub_;//SYSUCODE
-    quad_msgs::QuadStateEstimate inner_design_msg_;//SYSUCODE
+    /*SYSUcode*/
+    ros::Publisher inner_design_pub_;
+    quad_msgs::QuadStateEstimate inner_design_msg_;
+    ros::Publisher filter_pub_;
+    quad_msgs::QuadStateEstimate filter_msg_;
+    ros::Publisher rungekutta_pub_;
+    quad_msgs::QuadStateEstimate rungekutta_msg_;
+    QuadState stateimu_;
+    void rotorsHandsFreeCallback(const sensor_msgs::Imu::ConstPtr& msg);//imu回调函数
+    /*SYSUcode*/
 
     ros::Timer control_timer_;
     std_msgs::Bool armed_out_;
@@ -171,9 +181,19 @@ namespace ftc
 
     void attitudeloopCallback(const geometry_msgs::PointConstPtr& msg);
     ros::Subscriber attitude_sub_;
-    Eigen::Vector3d n_des_b;
+    Eigen::Vector3d n_des_eu;
     Eigen::Vector3d n_eular;
     void quaterniontoeulerangles();
+
+    /*Rungekutta*/
+    Eigen::Vector3d omegax_in, omegay_in, omegax_out, omegay_out, R_m;
+    Eigen::Vector3d omega_dot_rungekutta;
+    double R_h, R_ksi, R_w;
+    void RungeKuttaProgess(const Eigen::Vector3d& Rx_in, Eigen::Vector3d& Rx_out,const Eigen::Vector3d& Ry_in, Eigen::Vector3d& Ry_out);
+    void setRm(Eigen::Vector3d rm);
+    Eigen::Vector3d R_fun1(Eigen::Vector3d x, Eigen::Vector3d y);
+    Eigen::Vector3d R_fun2(Eigen::Vector3d x, Eigen::Vector3d y);
+    /*Rungekutta*/
   };
 
 } // namespace ftc

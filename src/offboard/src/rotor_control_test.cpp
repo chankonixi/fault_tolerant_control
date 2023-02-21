@@ -18,7 +18,7 @@ int main(int argc, char **argv)
 
   ros::init(argc, argv, "rotor_control");
   ros::NodeHandle n;
-  ros::Publisher rotor_control_pub_ = n.advertise<mavros_msgs::RotorControl>("/uav1/mavros/rotorcontrol/rotor_control", 1);
+  ros::Publisher rotor_control_pub_ = n.advertise<mavros_msgs::RotorControl>("/mavros/rotorcontrol/rotor_control", 1); //  /uav1
   ros::Subscriber motor_command_sub_ = n.subscribe("/hummingbird/control_command", 10, state_cb);  
   ros::Rate loop_rate(250);
   while (ros::ok())

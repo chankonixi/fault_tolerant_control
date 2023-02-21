@@ -29,6 +29,9 @@
 #include "geometry_msgs/Point.h"
 #include "geometry_msgs/PoseStamped.h"
 #include "geometry_msgs/TwistStamped.h"
+#include <geometry_msgs/Vector3.h>
+#include <sensor_msgs/Imu.h>
+
 
 
 namespace rotors_interface
@@ -59,12 +62,25 @@ namespace rotors_interface
             void rotorsOdometryCallback(const nav_msgs::Odometry::ConstPtr& msg);
             void rotorsgazeboOdometryCallback(const nav_msgs::Odometry::ConstPtr& msg);
             void rotorsVrpnPoseCallback(const geometry_msgs::PoseStamped::ConstPtr& msg);
-            void rotorsVrpnTwistCallback(const geometry_msgs::TwistStamped::ConstPtr& msg);
+            void rotorsVrpnTwistCallback(const geometry_msgs::TwistStamped::ConstPtr& msg);//vicon
+
+            void rotorsViconPoseCallback(const geometry_msgs::PoseStamped::ConstPtr& msg);
+            void rotorsViconTwistCallback(const geometry_msgs::TwistStamped::ConstPtr& msg);
+            void rotorsHandsFreeCallback(const sensor_msgs::Imu::ConstPtr& msg);//handsfree
+            void rotorsMavrosImuCallback(const sensor_msgs::Imu::ConstPtr& msg);//mavrosimu
+            ros::Subscriber rotors_vicon_pose_sub_;
+            ros::Subscriber rotors_vicon_twist_sub_;
+            ros::Subscriber rotors_hands_free_sub_;
+            ros::Subscriber rotors_mavros_imu_sub_;
             void ftcMotorCommandCallback(const quad_msgs::ControlCommand::ConstPtr& msg);
 
             ros::Subscriber inner_design_sub_;//SYSUCODE
             ros::Publisher  reference_pub_;//SYSUCODE
             void ftcInnerdesignCallback(const quad_msgs::QuadStateEstimate::ConstPtr& msg);//SYSUCODE
+            ros::Subscriber filter_sub_;//SYSUCODE
+            void ftcFilterCallback(const quad_msgs::QuadStateEstimate::ConstPtr& msg);//SYSUCODE
+            ros::Subscriber rungekutta_sub_;//SYSUCODE
+            void ftcRungekuttaCallback(const quad_msgs::QuadStateEstimate::ConstPtr& msg);//SYSUCODE
             ros::Timer control_timer_;
             void looptrajectory();
             bool trajectory_received_=false;
@@ -79,6 +95,8 @@ namespace rotors_interface
             void loopattitude();
             ros::Publisher  attitude_pub_;
             geometry_msgs::Point att_design_msg_;
+            quad_msgs::QuadStateEstimate handsfree_msg_pub;
+            quad_msgs::QuadStateEstimate viconinertia_msg_pub;
     };
 
 } // namespace rotors_interface

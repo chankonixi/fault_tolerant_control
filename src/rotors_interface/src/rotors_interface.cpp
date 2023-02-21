@@ -42,26 +42,39 @@ RotorSInterface::RotorSInterface
         "state_est", 1);
     rotor_control_pub_ = nh_.advertise<mavros_msgs::RotorControl>("rotor_control", 1000);   
     // reference_pub_ = nh_.advertise<geometry_msgs::Point>("reference_pos",1);//SYSU_CODE   
-    attitude_pub_ = nh_.advertise<geometry_msgs::Point>("reference_att",1);
+    //attitude_pub_ = nh_.advertise<geometry_msgs::Point>("reference_att",1);
 
 /*订阅话题：订阅gazebo中的odometry；订阅容错控制器中control_command
 (问题：control_command是否为电机PWM控制信号，利用motorcommandcallback转化成电机转速并利用motor_speed话题发布出去，如果是转化函数是多少)*/
 
-    rotors_odometry_sub_ = nh_.subscribe(
-        "ground_truth/odometry", 1, &RotorSInterface::rotorsOdometryCallback, this);  
-    rotors_gazebo_odometry_sub_ = nh_.subscribe(
-        "/uav1/mavros/local_position/odom", 1, &RotorSInterface::rotorsgazeboOdometryCallback, this);     
+    // rotors_odometry_sub_ = nh_.subscribe(
+    //     "ground_truth/odometry", 1, &RotorSInterface::rotorsOdometryCallback, this);  //源码
+    // rotors_gazebo_odometry_sub_ = nh_.subscribe(
+    //     "/uav1/mavros/local_position/odom", 1, &RotorSInterface::rotorsgazeboOdometryCallback, this);     //vicon+mavros
     // rotors_vrpn_pose_sub_ = nh_.subscribe(
     //     "/vrpn_client_node/uav1/pose", 1, &RotorSInterface::rotorsVrpnPoseCallback, this); 
     // rotors_vrpn_twist_sub_ = nh_.subscribe(
-    //     "/vrpn_client_node/uav1/twist", 1, &RotorSInterface::rotorsVrpnTwistCallback, this); 
+    //     "/vrpn_client_node/uav1/twist", 1, &RotorSInterface::rotorsVrpnTwistCallback, this); //纯vicon
+
+    rotors_vicon_pose_sub_ = nh_.subscribe(
+        "/vrpn_client_node/uav1/pose", 1, &RotorSInterface::rotorsViconPoseCallback, this); 
+    rotors_vicon_twist_sub_ = nh_.subscribe(
+        "/vrpn_client_node/uav1/twist", 1, &RotorSInterface::rotorsViconTwistCallback, this); 
+    // rotors_hands_free_sub_ = nh_.subscribe(
+    //     "/handsfree/imu", 1, &RotorSInterface::rotorsHandsFreeCallback, this); //vicon+imu
+    rotors_mavros_imu_sub_ = nh_.subscribe(
+        "/mavros/imu/data", 1, &RotorSInterface::rotorsMavrosImuCallback, this); //vicon+imu   /uav1
     motor_command_sub_ = nh_.subscribe(
         "control_command", 1, &RotorSInterface::ftcMotorCommandCallback, this);  
 
     inner_design_sub_ = nh_.subscribe(
         "inner_design", 1, &RotorSInterface::ftcInnerdesignCallback, this);
-    start_rotors_sub_ = nh_.subscribe(
-        "start_rotors", 1, &RotorSInterface::startRotorsCallback, this);
+    filter_sub_ = nh_.subscribe(
+        "filter_design", 1, &RotorSInterface::ftcFilterCallback, this);
+    rungekutta_sub_ = nh_.subscribe(
+        "omega_rungekutta", 1, &RotorSInterface::ftcRungekuttaCallback, this);
+    // start_rotors_sub_ = nh_.subscribe(
+    //     "start_rotors", 1, &RotorSInterface::startRotorsCallback, this);
     };
 
 
@@ -108,6 +121,7 @@ void RotorSInterface::rotorsOdometryCallback(
   return;
 }
 
+//--------------------------------------------------------------------------------------------
 void RotorSInterface::rotorsgazeboOdometryCallback(
     const nav_msgs::Odometry::ConstPtr& msg)
 {
@@ -148,7 +162,7 @@ void RotorSInterface::rotorsgazeboOdometryCallback(
 
   return;
 }
-
+//--------------------------------------------------------------------------------------------
 void RotorSInterface::rotorsVrpnPoseCallback(
     const geometry_msgs::PoseStamped::ConstPtr& msg)
 {
@@ -168,23 +182,9 @@ void RotorSInterface::rotorsVrpnTwistCallback(
     const geometry_msgs::TwistStamped::ConstPtr& msg)
 {
   vrpn_msg_pub.header = msg->header;
-
-  Eigen::Vector3d Vb = (Eigen::Vector3d() 
-                    << msg->twist.linear.x, 
-                        msg->twist.linear.y, 
-                        msg->twist.linear.z
-                        ).finished(); 
-  Eigen::Quaterniond q;
-  q.w() = vrpn_msg_pub.orientation.w; 
-  q.x() = vrpn_msg_pub.orientation.x;
-  q.y() = vrpn_msg_pub.orientation.y;
-  q.z() = vrpn_msg_pub.orientation.z;
-
-/*问题：Vi转化的含义是什么，*/
-  Eigen::Vector3d Vi = q * Vb;
-  vrpn_msg_pub.velocity.x    = Vi(0);
-  vrpn_msg_pub.velocity.y    = Vi(1);
-  vrpn_msg_pub.velocity.z    = Vi(2);
+  vrpn_msg_pub.velocity.x    = msg->twist.linear.x;
+  vrpn_msg_pub.velocity.y    = msg->twist.linear.y;
+  vrpn_msg_pub.velocity.z    = msg->twist.linear.z;
   vrpn_msg_pub.bodyrates.x   = msg->twist.angular.x;
   vrpn_msg_pub.bodyrates.y   = msg->twist.angular.y;
   vrpn_msg_pub.bodyrates.z   = msg->twist.angular.z;
@@ -193,6 +193,67 @@ void RotorSInterface::rotorsVrpnTwistCallback(
   state_est_pub_.publish(vrpn_msg_pub);
   return;
 }
+
+//--------------------------------------------------------------------------------------------
+void RotorSInterface::rotorsViconPoseCallback(
+    const geometry_msgs::PoseStamped::ConstPtr& msg)
+{
+
+  handsfree_msg_pub.header = msg->header;
+  handsfree_msg_pub.position.x    = msg->pose.position.x;
+  handsfree_msg_pub.position.y    = msg->pose.position.y;
+  handsfree_msg_pub.position.z    = msg->pose.position.z;
+  handsfree_msg_pub.orientation.w = msg->pose.orientation.w;  
+  handsfree_msg_pub.orientation.x = msg->pose.orientation.x;
+  handsfree_msg_pub.orientation.y = msg->pose.orientation.y;
+  handsfree_msg_pub.orientation.z = msg->pose.orientation.z;
+  return;
+}
+
+void RotorSInterface::rotorsViconTwistCallback(
+    const geometry_msgs::TwistStamped::ConstPtr& msg)
+{
+  handsfree_msg_pub.header = msg->header;
+  handsfree_msg_pub.velocity.x    = msg->twist.linear.x;
+  handsfree_msg_pub.velocity.y    = msg->twist.linear.y;
+  handsfree_msg_pub.velocity.z    = msg->twist.linear.z;
+  return;
+}
+
+void RotorSInterface::rotorsHandsFreeCallback(
+    const sensor_msgs::Imu::ConstPtr& msg)
+{
+   
+  handsfree_msg_pub.header = msg->header;
+//   handsfree_msg_pub.orientation.w = msg->orientation.w;  
+//   handsfree_msg_pub.orientation.x = msg->orientation.x;
+//   handsfree_msg_pub.orientation.y = msg->orientation.y;
+//   handsfree_msg_pub.orientation.z = msg->orientation.z;
+  handsfree_msg_pub.bodyrates.x = msg->angular_velocity.x;
+  handsfree_msg_pub.bodyrates.y = msg->angular_velocity.y;
+  handsfree_msg_pub.bodyrates.z = msg->angular_velocity.z;
+
+  /*state_set话题发布的内容*/
+  state_est_pub_.publish(handsfree_msg_pub);
+  
+  return;
+}
+
+void RotorSInterface::rotorsMavrosImuCallback(
+    const sensor_msgs::Imu::ConstPtr& msg)
+{
+   
+  handsfree_msg_pub.header = msg->header;
+  handsfree_msg_pub.bodyrates.x = msg->angular_velocity.x;
+  handsfree_msg_pub.bodyrates.y = msg->angular_velocity.y;
+  handsfree_msg_pub.bodyrates.z = msg->angular_velocity.z;
+
+  /*state_set话题发布的内容*/
+  state_est_pub_.publish(handsfree_msg_pub);
+  
+  return;
+}
+
 
 void RotorSInterface::ftcMotorCommandCallback(
     const quad_msgs::ControlCommand::ConstPtr& msg)
@@ -249,7 +310,50 @@ void RotorSInterface::ftcInnerdesignCallback(const quad_msgs::QuadStateEstimate:
     msg_inn.bodyrates.x = msg->bodyrates.x;
     msg_inn.bodyrates.y = msg->bodyrates.y;
     msg_inn.bodyrates.z = msg->bodyrates.z;
-    // ROS_INFO("%f %f %f", msg_inn.bodyrates.x, msg_inn.bodyrates.y, msg_inn.bodyrates.z);
+    msg_inn.position.x = msg->position.x;
+    msg_inn.position.y = msg->position.y;
+    msg_inn.position.z = msg->position.z;
+    msg_inn.velocity.x = msg->velocity.x;
+    msg_inn.velocity.y = msg->velocity.y;
+    msg_inn.velocity.z = msg->velocity.z;
+    msg_inn.orientation.x = msg->orientation.x;
+    msg_inn.orientation.y = msg->orientation.y;
+    msg_inn.orientation.z = msg->orientation.z;
+    msg_inn.orientation.w = msg->orientation.w;
+}
+
+void RotorSInterface::ftcFilterCallback(const quad_msgs::QuadStateEstimate::ConstPtr& msg)
+{
+    quad_msgs::QuadStateEstimate msg_filter;
+    msg_filter.header = msg->header;
+    msg_filter.bodyrates.x = msg->bodyrates.x;
+    msg_filter.bodyrates.y = msg->bodyrates.y;
+    msg_filter.bodyrates.z = msg->bodyrates.z;
+    msg_filter.position.x = msg->position.x;
+    msg_filter.position.y = msg->position.y;
+    msg_filter.position.z = msg->position.z;
+    msg_filter.velocity.x = msg->velocity.x;
+    msg_filter.velocity.y = msg->velocity.y;
+    msg_filter.velocity.z = msg->velocity.z;
+}
+
+void RotorSInterface::ftcRungekuttaCallback(const quad_msgs::QuadStateEstimate::ConstPtr& msg)
+{
+    quad_msgs::QuadStateEstimate msg_rungekutta;
+    msg_rungekutta.header = msg->header;
+    msg_rungekutta.velocity.x = msg->velocity.x;
+    msg_rungekutta.velocity.y = msg->velocity.y;
+    msg_rungekutta.velocity.z = msg->velocity.z;
+    msg_rungekutta.orientation.x = msg->orientation.x;
+    msg_rungekutta.orientation.y = msg->orientation.y;
+    msg_rungekutta.orientation.z = msg->orientation.z;
+    msg_rungekutta.orientation.w = msg->orientation.w;
+    msg_rungekutta.position.x = msg->position.x;
+    msg_rungekutta.position.y = msg->position.y;
+    msg_rungekutta.position.z = msg->position.z;
+    msg_rungekutta.bodyrates.x = msg->bodyrates.x;
+    msg_rungekutta.bodyrates.y = msg->bodyrates.y;
+    msg_rungekutta.bodyrates.z = msg->bodyrates.z;
 }
 /*SYSUCODE*/
 
@@ -272,7 +376,7 @@ void RotorSInterface::looptrajectory()
         double time = ros::Time::now().toSec() - time_traj_received_;
         pos_design_msg_.x = 0.0;
         pos_design_msg_.y = 0.0;
-        pos_design_msg_.z = 0.0;
+        pos_design_msg_.z = 1.0/(1.0+exp(-(time-0.5)/2));
         // reference_pub_.publish(pos_design_msg_);
     }
     else 
@@ -289,7 +393,7 @@ void RotorSInterface::loopattitude()
         att_design_msg_.x = 0.0;
         att_design_msg_.y = 0.0;
         att_design_msg_.z = 1.0;
-        attitude_pub_.publish(att_design_msg_);
+        //attitude_pub_.publish(att_design_msg_);
     }
     else 
     {

@@ -48,17 +48,25 @@ namespace ftc {
     reference_sub_    = nh_.subscribe("reference_pos", 1, &NDICtrl::referenceUpdateCallback, this );
     yaw_rate_sub_     = nh_.subscribe("heading_design", 1, &NDICtrl::headingCallback, this );
     joy_sub_          = nh_.subscribe("joy", 1, &NDICtrl::joyCallback, this );
-    attitude_sub_     = nh_.subscribe("reference_att", 1, &NDICtrl::attitudeloopCallback, this );
 
     motor_command_pub_ = nh_.advertise<quad_msgs::ControlCommand>("control_command", 1); 
     arm_pub_      = nh_.advertise<std_msgs::Bool>("control_active", 1);
     kill_pub_     = nh_.advertise<std_msgs::Empty>("emergency_kill", 1);
 
-    inner_design_pub_  = nh_.advertise<quad_msgs::QuadStateEstimate>("inner_design", 1);//SYSUCODE
+    /*SYSUcode*/
+    attitude_sub_      = nh_.subscribe("reference_att", 1, &NDICtrl::attitudeloopCallback, this );
+    // state_imu_sub_     = nh_.subscribe("/handsfree/imu", 1, &NDICtrl::rotorsHandsFreeCallback, this );
+    inner_design_pub_  = nh_.advertise<quad_msgs::QuadStateEstimate>("inner_design", 1);
+    filter_pub_        = nh_.advertise<quad_msgs::QuadStateEstimate>("filter_design", 1);
+    rungekutta_pub_    = nh_.advertise<quad_msgs::QuadStateEstimate>("omega_rungekutta", 1);
+    /*SYSUcode*/
 
     yaw_rate_err_int_ = 0.0;
     motor_command_msg_.control_mode = 3;
     motor_command_msg_.mot_throttle = {0.0, 0.0, 0.0, 0.0};
+
+    /*Rungekutta*/
+    R_h = 1.0/ctrl_rate_;
 
     if (sqrt(nx_b_*nx_b_+ny_b_*ny_b_) >= 0.5) {
       ROS_ERROR("[%s] Wrong primary axis setting.",
@@ -78,7 +86,7 @@ namespace ftc {
     time_traj_update_ = 0.0;
 
     heading_target_ = 0.0;
-    use_vio_ = true;
+    use_vio_ = false;
 
     // calculate control effective matrix G and it's inverse
     calculateControlEffectiveness();
@@ -209,8 +217,8 @@ namespace ftc {
       state_.velocity.y()     =   msg->velocity.y; 
       state_.velocity.z()     =   msg->velocity.z;         
 
-      pos_design_current_position_.x() = msg->position.x;//与vio有关
-      pos_design_current_position_.y() = msg->position.y;     
+      // pos_design_current_position_.x() = msg->position.x;//与vio有关
+      // pos_design_current_position_.y() = msg->position.y;     
 
       state_.orientation.x()  =   msg->orientation.x;    //更新姿态
       state_.orientation.y()  =   msg->orientation.y;    
@@ -221,6 +229,19 @@ namespace ftc {
       state_.bodyrates.y()    =   msg->bodyrates.y;        
       state_.bodyrates.z()    =   msg->bodyrates.z;   
   }
+
+  void NDICtrl::rotorsHandsFreeCallback(const sensor_msgs::Imu::ConstPtr& msg)  {
+      stateimu_.timestamp = msg->header.stamp;
+      stateimu_.orientation.w() = msg->orientation.w;  
+      stateimu_.orientation.x() = msg->orientation.x;
+      stateimu_.orientation.y() = msg->orientation.y;
+      stateimu_.orientation.z() = msg->orientation.z;
+      stateimu_.bodyrates.x() = msg->angular_velocity.x;
+      stateimu_.bodyrates.y() = msg->angular_velocity.y;
+      stateimu_.bodyrates.z() = msg->angular_velocity.z;
+  
+    return;
+}
 
   void NDICtrl::referenceUpdateCallback(const geometry_msgs::PointConstPtr& msg)  {
       
@@ -237,11 +258,10 @@ namespace ftc {
   }
 
   void NDICtrl::controlUpdateCallback(const ros::TimerEvent&)  {
-    
     if (armed_out_.data && estimation_received_) //经过startrotor函数和stateupdate函数后两个条件都满足
     {
       arm_pub_.publish(armed_out_);//只有当armed_out和estimation_received同时为true时才会pub
-      // ROS_INFO("estimation received");
+      // ROS_ERROR("estimation received");
     }
     else //否则直接return
     {
@@ -253,7 +273,7 @@ namespace ftc {
       std_msgs::Empty emsg;
       kill_pub_.publish(emsg);
     }
-    //controller_outerloop();
+    // controller_outerloop(); 
     controller_innerloop();
     sendMotorCommand();
 
@@ -270,7 +290,7 @@ namespace ftc {
 
   void NDICtrl::sendMotorCommand()  {
     int throttle[4];
-    // thrust_={1.2,1.5,1.8,2.0};
+    // thrust_={3.2,1.2,1.2,3.2};
     for (int i=0; i<thrust_.size();i++) {
       limit(thrust_(i), 0.0, 8.0);//限制每个旋翼升力
       throttle[i] = static_cast<int>((-coeff2_ + sqrt(coeff2_ * coeff2_ - 4.0 * coeff1_ * (coeff3_ - thrust_(i)))) / (2.0 * coeff1_));//每个旋翼PWM值
@@ -296,7 +316,6 @@ namespace ftc {
     n_b_(0) = msg->x;
     n_b_(1) = msg->y;
     n_b_(2) = msg->z;
-    // ROS_INFO("n_des_b: %f %f %f", n_des_b(0), n_des_b(1), n_des_b(2));
     return;
   }
 
@@ -377,6 +396,19 @@ namespace ftc {
 
       a_des_ = acc_des + Kd_pos * (vel_des - velocity_used) 
                 + Kp_pos * pos_err  + Ki_pos * pos_err_int_ - g_vect_;  
+      
+      /*SYSUcode*/
+      filter_msg_.bodyrates.x = acc_des(0);
+      filter_msg_.bodyrates.y = acc_des(1);
+      filter_msg_.bodyrates.z = acc_des(2);
+      filter_msg_.position.x = pos_des(0);
+      filter_msg_.position.y = pos_des(1);
+      filter_msg_.position.z = pos_des(2);
+      filter_msg_.velocity.x = pos_err_int_(0);
+      filter_msg_.velocity.y = pos_err_int_(1);
+      filter_msg_.velocity.z = pos_err_int_(2);
+      filter_pub_.publish(filter_msg_);
+      /*SYSUcode*/
     }
 
 
@@ -401,44 +433,50 @@ namespace ftc {
     }
     else {
       if (joy_called_) {
+         ROS_INFO("JOYCALLED");
         a_des_(0) = joy_msg_.axes[4] * max_horz_acc_;
         a_des_(1) = joy_msg_.axes[3] * max_horz_acc_;  
       }
       else {
+        // ROS_INFO("NOT JOYCALLED");
         a_des_(0) = 0.0;
         a_des_(1) = 0.0;
       }
-      if(manual_mode_) a_des_(2) = joy_msg_.axes[1] * max_vert_acc_ + g_;   
-      else limit(a_des_(2), g_ - max_vert_acc_, g_ + max_vert_acc_);
+      if(manual_mode_) {
+        ROS_INFO("Manual mode");
+        a_des_(2) = joy_msg_.axes[1] * max_vert_acc_ + g_;   
+      }
+      else {
+        // ROS_INFO("Not manual mode");
+        limit(a_des_(2), g_ - max_vert_acc_, g_ + max_vert_acc_);
+      }
     }
     return;
   };
   
   void NDICtrl::controller_innerloop()  { 
-
     // change nb after failure happens. Keep it unchanged at the 1st second.
-    // time_now_ = ros::Time::now().toNSec();
-    // if ((time_now_ - time_fail_) <= 1.0*1e9)
-    //   n_b_ << 0.0, 0.0, 1.0;
-    // else
-    //   n_b_ << nx_b_, ny_b_, sqrt(1 - nx_b_*nx_b_ - ny_b_*ny_b_);//机体系坐标
+    time_now_ = ros::Time::now().toNSec();
+    if ((time_now_ - time_fail_) <= 1.0*1e9)
+      n_b_ << 0.0, 0.0, 1.0;
+    else
+      n_b_ << nx_b_, ny_b_, sqrt(1 - nx_b_*nx_b_ - ny_b_*ny_b_);//机体系坐标z轴向上
 
-    //Eigen::Vector3d n_des_i  = a_des_ / a_des_.norm();
-    //Eigen::Vector3d n_des_b = state_.orientation.inverse() * n_des_i;
-    // ROS_INFO("n_des_b: %f %f %f", n_des_b(0), n_des_b(1), n_des_b(2));
+    a_des_ = -g_vect_;
+    Eigen::Vector3d n_des_i  = a_des_ / a_des_.norm();
+    Eigen::Vector3d n_des_b = state_.orientation.inverse() * n_des_i;
     quaterniontoeulerangles();
     
     Eigen::Vector3d z_body = state_.orientation.inverse() * Eigen::Vector3d::UnitZ();
-    z_body = z_body/z_body.norm();
+    z_body = z_body/z_body.norm()  ;
     double theta = std::acos(((-g_vect_).dot(z_body))/g_);
     double theta_1 = 1.00; // deg2rad(60)
     double thrust_design(0.0);
-    thrust_design = (m_*g_)/cos(std::min(theta,theta_1));
+    thrust_design = (m_*a_des_(2))/cos(std::min(theta,theta_1));
 
     // reduced attitude controller
     Eigen::Vector2d nu_out;
     Eigen::Vector3d nb_err = n_b_ - n_des_b;
-    ROS_INFO("nb_err: %f %f %f", nb_err(0), nb_err(1), nb_err(2));
 
     if(!referenceUpdated_) {
       // Reset all integral terms once take-off command is sent
@@ -482,15 +520,19 @@ namespace ftc {
       }
       else {
         if (joy_called_) omega_z_design = joy_msg_.axes[0] * 5.0;  
-        else  omega_z_design = 0.0;        
+        else  {
+          //ROS_INFO("NOT VIO");
+          omega_z_design = 0.0;
+        }        
       }
       double yaw_rate_err = omega_z_design - state_.bodyrates.z();
       integrator(yaw_rate_err, yaw_rate_err_int_, 1.0/ctrl_rate_, 30.0);
       omega_dot_design(2) =  K_yaw_[1]  * yaw_rate_err + K_yaw_[2] * yaw_rate_err_int_;
-      inner_design_msg_.bodyrates.x = n_des_b(0);//SYSUCODE
-      inner_design_msg_.bodyrates.y = n_des_b(1);//SYSUCODE
-      inner_design_msg_.bodyrates.z = n_des_b(2);//SYSUCODE
-      inner_design_pub_.publish(inner_design_msg_);//SYSUCODE
+
+      /*Rungekutta*/
+      setRm(omega_dot_design);
+      RungeKuttaProgess(omegax_in, omegax_out, omegay_in, omegay_out);
+      omega_dot_rungekutta = omegax_out; omegax_in = omegax_out; omegay_in = omegay_out;
     }
 
     // Control allocation
@@ -501,6 +543,37 @@ namespace ftc {
 
     thrust_ = G_inv_ * mu;
 
+    /*SYSUcode*/
+    inner_design_msg_.bodyrates.x = n_des_b(0);
+    inner_design_msg_.bodyrates.y = n_des_b(1);
+    inner_design_msg_.bodyrates.z = n_des_b(2);
+    inner_design_msg_.position.x = a_des_(0);
+    inner_design_msg_.position.y = a_des_(1);
+    inner_design_msg_.position.z = a_des_(2);
+    inner_design_msg_.velocity.x = omega_dot_design(0);
+    inner_design_msg_.velocity.y = omega_dot_design(1);
+    inner_design_msg_.velocity.z = omega_dot_design(2);
+    inner_design_msg_.orientation.x = mu(0);
+    inner_design_msg_.orientation.y = mu(1);
+    inner_design_msg_.orientation.z = mu(2);
+    inner_design_msg_.orientation.w = mu(3);
+    inner_design_pub_.publish(inner_design_msg_);
+
+    rungekutta_msg_.velocity.x = omega_dot_rungekutta(0);
+    rungekutta_msg_.velocity.y = omega_dot_rungekutta(1);
+    rungekutta_msg_.velocity.z = omega_dot_rungekutta(2);
+    rungekutta_msg_.orientation.x = kph * (n_b_(1) - n_des_b(1));
+    rungekutta_msg_.orientation.y = kdh * ( n_des_b(0) * state_.bodyrates.z() -  n_des_b(2) * state_.bodyrates.x());
+    rungekutta_msg_.orientation.z = kph * (n_b_(0) - n_des_b(0));
+    rungekutta_msg_.orientation.w = kdh * (-n_des_b(1) * state_.bodyrates.z() +  n_des_b(2) * state_.bodyrates.y());
+    rungekutta_msg_.position.x = (Inertia_ * omega_dot_design)(0);
+    rungekutta_msg_.position.y = (Inertia_ * omega_dot_design)(1);
+    rungekutta_msg_.position.z = (Inertia_ * omega_dot_design)(2);
+    rungekutta_msg_.bodyrates.x = state_.bodyrates.cross(Inertia_ * state_.bodyrates)(0);
+    rungekutta_msg_.bodyrates.y = state_.bodyrates.cross(Inertia_ * state_.bodyrates)(1);
+    rungekutta_msg_.bodyrates.z = state_.bodyrates.cross(Inertia_ * state_.bodyrates)(2);
+    rungekutta_pub_.publish(rungekutta_msg_);
+    /*SYSUcode*/
     return;
   };
 
@@ -526,6 +599,8 @@ namespace ftc {
     check &= pnh_.param("Ix",         Ix_,         1.45e-3);
     check &= pnh_.param("Iy",         Iy_,         1.26e-3);
     check &= pnh_.param("Iz",         Iz_,         2.52e-3);
+    check &= pnh_.param("Rw",         R_w,          2.0); 
+    check &= pnh_.param("Rksi",       R_ksi,        0.7); 
     check &= pnh_.getParam("lever_arm_x",   lever_arm_x_);//从yaml文件取值
     check &= pnh_.getParam("lever_arm_y",   lever_arm_y_);
     check &= pnh_.getParam("drag_coeff",    drag_coeff_);
@@ -599,6 +674,7 @@ namespace ftc {
     return;
   }
 
+  /*SYSUcode*/
   void NDICtrl::quaterniontoeulerangles(){
     double sinr_cosp = 2 * (state_.orientation.w() * state_.orientation.x() + state_.orientation.y() * state_.orientation.z());
     double cosr_cosp = 1 - 2 * (state_.orientation.x() * state_.orientation.x() + state_.orientation.y() * state_.orientation.y());
@@ -615,10 +691,37 @@ namespace ftc {
     double siny_cosp = 2 * (state_.orientation.w() * state_.orientation.z() + state_.orientation.x() * state_.orientation.y());
     double cosy_cosp = 1 - 2 * (state_.orientation.y() * state_.orientation.y() + state_.orientation.z() * state_.orientation.z());
     n_eular(2) = std::atan2(siny_cosp, cosy_cosp);
-    n_des_b(0) = cos(n_eular(2))*sin(n_eular(1))*cos(n_eular(0))+sin(n_eular(2))*sin(n_eular(0));
-    n_des_b(1) = sin(n_eular(2))*sin(n_eular(1))*cos(n_eular(0))-sin(n_eular(2))*cos(n_eular(0));
-    n_des_b(2) = cos(n_eular(1))*cos(n_eular(0));
+    n_des_eu(0) = cos(n_eular(2))*sin(n_eular(1))*cos(n_eular(0))+sin(n_eular(2))*sin(n_eular(0));
+    n_des_eu(1) = sin(n_eular(2))*sin(n_eular(1))*cos(n_eular(0))-sin(n_eular(2))*cos(n_eular(0));
+    n_des_eu(2) = cos(n_eular(1))*cos(n_eular(0));
   }
+
+  void NDICtrl::RungeKuttaProgess(
+    const Eigen::Vector3d& Rx_in, Eigen::Vector3d& Rx_out,const Eigen::Vector3d& Ry_in, Eigen::Vector3d& Ry_out){
+    Eigen::Vector3d K1_x,K2_x,K3_x,K4_x,K1_y,K2_y,K3_y,K4_y;
+    K1_x=R_fun1(Rx_in,Ry_in);                             K1_y=R_fun2(Rx_in,Ry_in);
+    K2_x=R_fun1(Rx_in+K1_x*R_h/2,Ry_in+K1_y*R_h/2);       K2_y=R_fun2(Rx_in+K1_x*R_h/2,Ry_in+K1_y*R_h/2);
+    K3_x=R_fun1(Rx_in+K2_x*R_h/2,Ry_in+K2_y*R_h/2);       K3_y=R_fun2(Rx_in+K2_x*R_h/2,Ry_in+K2_y*R_h/2);
+    K4_x=R_fun1(Rx_in+K3_x*R_h,Ry_in+K3_y*R_h);           K4_y=R_fun2(Rx_in+K3_x*R_h,Ry_in+K3_y*R_h);
+    Rx_out=Rx_in+R_h*(K1_x+2*K2_x+2*K3_x+K4_x)/6.0;       Ry_out=Ry_in+R_h*(K1_y+2*K2_y+2*K3_y+K4_y)/6.0;
+  }
+
+  Eigen::Vector3d NDICtrl::R_fun1(Eigen::Vector3d x ,Eigen::Vector3d y){
+    Eigen::Vector3d dx;
+    dx = y;
+    return dx;
+  }
+
+  Eigen::Vector3d NDICtrl::R_fun2(Eigen::Vector3d x ,Eigen::Vector3d y){
+    Eigen::Vector3d dy;
+    dy = (R_m - x) * R_w * R_w - 2 * R_w * R_ksi * y;
+    return dy;
+  }
+
+  void NDICtrl::setRm(Eigen::Vector3d rm){
+    R_m = rm;
+  }
+  /*SYSUcode*/
 
 } //namespace ftc
 
