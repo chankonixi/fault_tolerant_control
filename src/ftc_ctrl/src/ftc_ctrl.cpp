@@ -56,6 +56,7 @@ namespace ftc {
     /*SYSUcode*/
     attitude_sub_      = nh_.subscribe("reference_att", 1, &NDICtrl::attitudeloopCallback, this );
     // state_imu_sub_     = nh_.subscribe("/handsfree/imu", 1, &NDICtrl::rotorsHandsFreeCallback, this );
+    mav_battery_sub_   = nh_.subscribe("/mavros/battery", 1, &NDICtrl::mavrosBatteryCallback, this );
     inner_design_pub_  = nh_.advertise<quad_msgs::QuadStateEstimate>("inner_design", 1);
     filter_pub_        = nh_.advertise<quad_msgs::QuadStateEstimate>("filter_design", 1);
     rungekutta_pub_    = nh_.advertise<quad_msgs::QuadStateEstimate>("omega_rungekutta", 1);
@@ -80,7 +81,7 @@ namespace ftc {
                 0.0,  Iy_,  0.0,
                 0.0,  0.0,  Iz_;
 
-    pos_design_ << 0.0, 0.0, -1.0; //设定位置，程序的惯性坐标系z轴向上
+    pos_design_ << 0.0, 0.0, 1.0; //设定位置，程序的惯性坐标系z轴向上
 
     time_fail_ = 0.0;
     time_traj_update_ = 0.0;
@@ -241,7 +242,15 @@ namespace ftc {
       stateimu_.bodyrates.z() = msg->angular_velocity.z;
   
     return;
-}
+  }
+
+  void NDICtrl::mavrosBatteryCallback(const sensor_msgs::BatteryState::ConstPtr& msg)  {
+      batterystate.header = msg->header;
+      batterystate.voltage = msg->voltage;
+      batterystate.percentage = msg->percentage;
+  
+    return;
+  }
 
   void NDICtrl::referenceUpdateCallback(const geometry_msgs::PointConstPtr& msg)  {
       
@@ -273,7 +282,7 @@ namespace ftc {
       std_msgs::Empty emsg;
       kill_pub_.publish(emsg);
     }
-    // controller_outerloop(); 
+    controller_outerloop(); 
     controller_innerloop();
     sendMotorCommand();
 
@@ -290,11 +299,15 @@ namespace ftc {
 
   void NDICtrl::sendMotorCommand()  {
     int throttle[4];
-    // thrust_={3.2,1.2,1.2,3.2};
+    // thrust_={3.2,1.2,1.2,1.2};
     for (int i=0; i<thrust_.size();i++) {
-      limit(thrust_(i), 0.0, 8.0);//限制每个旋翼升力
-      throttle[i] = static_cast<int>((-coeff2_ + sqrt(coeff2_ * coeff2_ - 4.0 * coeff1_ * (coeff3_ - thrust_(i)))) / (2.0 * coeff1_));//每个旋翼PWM值
+      // ROS_INFO("thrust_qian %zd: %f", i, thrust_(i));
+      limit(thrust_(i), 0.0, 4.5);//限制每个旋翼升力
+      // ROS_INFO("thrust_hou %zd: %f", i, thrust_(i));
+      throttle[i] = static_cast<int>((-coeff2_ + sqrt(coeff2_ * coeff2_ - 4.0 * coeff1_ * (coeff3_ - thrust_(i)))) / (2.0 * coeff1_ ));//每个旋翼PWM值
+      // ROS_INFO("throttle_qian %zd: %zd", i, throttle[i]);
       limit(throttle[i], kMinMotCom_DShot_, kMaxMotCom_DShot_);
+      // ROS_INFO("throttle_hou %zd: %zd", i, throttle[i]);
       // limit(throttle[i], 900, 2000);//PWM值限幅
       motor_command_msg_.mot_throttle[i] = throttle[i];
       motor_command_msg_.rotor_thrust[i] = thrust_(i);
@@ -302,7 +315,7 @@ namespace ftc {
 
     if (f_id_>=0 && f_id_ <=3) {
       throttle[f_id_] = 0;
-      motor_command_msg_.mot_throttle[f_id_] = 0;//失效旋翼PWM值为0
+      motor_command_msg_.mot_throttle[f_id_] = 0;//失效旋翼PWM值为0 暂时设置为1100
       motor_command_msg_.rotor_thrust[f_id_] = 0.0;//失效旋翼升力为0
     }
      
@@ -359,6 +372,7 @@ namespace ftc {
     }
     else {
       if (use_notch_filter_){//容错模式下开启filter
+        // ROS_INFO("FAILURE OUTLOOP");
         position_used << pos_filtered_notch_(0), pos_filtered_notch_(1), pos_filtered_notch_(2);
         velocity_used << vel_filtered_notch_(0), vel_filtered_notch_(1), vel_filtered_notch_(2);        
       }
@@ -401,9 +415,9 @@ namespace ftc {
       filter_msg_.bodyrates.x = acc_des(0);
       filter_msg_.bodyrates.y = acc_des(1);
       filter_msg_.bodyrates.z = acc_des(2);
-      filter_msg_.position.x = pos_des(0);
-      filter_msg_.position.y = pos_des(1);
-      filter_msg_.position.z = pos_des(2);
+      filter_msg_.position.x = pos_err(0);
+      filter_msg_.position.y = pos_err(1);
+      filter_msg_.position.z = pos_err(2);
       filter_msg_.velocity.x = pos_err_int_(0);
       filter_msg_.velocity.y = pos_err_int_(1);
       filter_msg_.velocity.z = pos_err_int_(2);
@@ -439,8 +453,11 @@ namespace ftc {
       }
       else {
         // ROS_INFO("NOT JOYCALLED");
-        a_des_(0) = 0.0;
-        a_des_(1) = 0.0;
+        // a_des_(0) = 0.0;
+        // a_des_(1) = 0.0;
+        //尝试加入横向的加速度，否则达不到控制目的
+        limit(a_des_(0), -max_horz_acc_, max_horz_acc_);
+        limit(a_des_(1), -max_horz_acc_, max_horz_acc_);
       }
       if(manual_mode_) {
         ROS_INFO("Manual mode");
@@ -462,10 +479,11 @@ namespace ftc {
     else
       n_b_ << nx_b_, ny_b_, sqrt(1 - nx_b_*nx_b_ - ny_b_*ny_b_);//机体系坐标z轴向上
 
-    a_des_ = -g_vect_;
+    // a_des_ = -g_vect_;
     Eigen::Vector3d n_des_i  = a_des_ / a_des_.norm();
     Eigen::Vector3d n_des_b = state_.orientation.inverse() * n_des_i;
-    quaterniontoeulerangles();
+    // ROS_INFO("%f %f %f", n_des_b(0), n_des_b(1), n_des_b(2));
+    // quaterniontoeulerangles();
     
     Eigen::Vector3d z_body = state_.orientation.inverse() * Eigen::Vector3d::UnitZ();
     z_body = z_body/z_body.norm()  ;
@@ -495,6 +513,7 @@ namespace ftc {
       kih = K_att_[2];
     }
     else {
+      // ROS_INFO("FAILURE_INNERLOOP");
       kph = K_att_fail_[0];
       kdh = K_att_fail_[1];
       kih = K_att_fail_[2];

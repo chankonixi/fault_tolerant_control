@@ -74,5 +74,9 @@
     "typeindex": "cpp",
     "typeinfo": "cpp",
     "bit": "cpp"
-  }
+  },
+  "python.analysis.extraPaths": [
+    "/home/chen/fault_tolerant/devel/lib/python2.7/dist-packages",
+    "/opt/ros/melodic/lib/python2.7/dist-packages"
+  ]
 }

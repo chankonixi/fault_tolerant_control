@@ -35,6 +35,7 @@
 #include "filter.h"
 #include <mavros_msgs/RotorControl.h>
 #include <sensor_msgs/Imu.h>
+#include <sensor_msgs/BatteryState.h>
 
 
 #define PI 3.14159265
@@ -65,6 +66,7 @@ namespace ftc
     ros::NodeHandle pnh_;
     ros::Subscriber state_est_sub_;
     ros::Subscriber state_imu_sub_;//接收imu信息
+    ros::Subscriber mav_battery_sub_;//接收电池电量
     ros::Subscriber reference_sub_; 
     ros::Subscriber start_rotors_sub_;
     ros::Subscriber stop_rotors_sub_;
@@ -85,6 +87,8 @@ namespace ftc
     quad_msgs::QuadStateEstimate rungekutta_msg_;
     QuadState stateimu_;
     void rotorsHandsFreeCallback(const sensor_msgs::Imu::ConstPtr& msg);//imu回调函数
+    void mavrosBatteryCallback(const sensor_msgs::BatteryState::ConstPtr& msg);//电池回调函数
+    sensor_msgs::BatteryState batterystate;
     /*SYSUcode*/
 
     ros::Timer control_timer_;

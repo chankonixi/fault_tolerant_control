@@ -50,7 +50,7 @@ RotorSInterface::RotorSInterface
     // rotors_odometry_sub_ = nh_.subscribe(
     //     "ground_truth/odometry", 1, &RotorSInterface::rotorsOdometryCallback, this);  //源码
     // rotors_gazebo_odometry_sub_ = nh_.subscribe(
-    //     "/uav1/mavros/local_position/odom", 1, &RotorSInterface::rotorsgazeboOdometryCallback, this);     //vicon+mavros
+    //     "/mavros/local_position/odom", 1, &RotorSInterface::rotorsgazeboOdometryCallback, this);     //vicon+mavros
     // rotors_vrpn_pose_sub_ = nh_.subscribe(
     //     "/vrpn_client_node/uav1/pose", 1, &RotorSInterface::rotorsVrpnPoseCallback, this); 
     // rotors_vrpn_twist_sub_ = nh_.subscribe(
@@ -61,7 +61,7 @@ RotorSInterface::RotorSInterface
     rotors_vicon_twist_sub_ = nh_.subscribe(
         "/vrpn_client_node/uav1/twist", 1, &RotorSInterface::rotorsViconTwistCallback, this); 
     // rotors_hands_free_sub_ = nh_.subscribe(
-    //     "/handsfree/imu", 1, &RotorSInterface::rotorsHandsFreeCallback, this); //vicon+imu
+    //     "/handsfree/imu", 1, &RotorSInterface::rotorsHandsFreeCallback, this); //vicon+imu handsfree
     rotors_mavros_imu_sub_ = nh_.subscribe(
         "/mavros/imu/data", 1, &RotorSInterface::rotorsMavrosImuCallback, this); //vicon+imu   /uav1
     motor_command_sub_ = nh_.subscribe(
@@ -203,10 +203,10 @@ void RotorSInterface::rotorsViconPoseCallback(
   handsfree_msg_pub.position.x    = msg->pose.position.x;
   handsfree_msg_pub.position.y    = msg->pose.position.y;
   handsfree_msg_pub.position.z    = msg->pose.position.z;
-  handsfree_msg_pub.orientation.w = msg->pose.orientation.w;  
-  handsfree_msg_pub.orientation.x = msg->pose.orientation.x;
-  handsfree_msg_pub.orientation.y = msg->pose.orientation.y;
-  handsfree_msg_pub.orientation.z = msg->pose.orientation.z;
+//   handsfree_msg_pub.orientation.w = msg->pose.orientation.w;  
+//   handsfree_msg_pub.orientation.x = msg->pose.orientation.x;
+//   handsfree_msg_pub.orientation.y = msg->pose.orientation.y;
+//   handsfree_msg_pub.orientation.z = msg->pose.orientation.z;
   return;
 }
 
@@ -247,6 +247,10 @@ void RotorSInterface::rotorsMavrosImuCallback(
   handsfree_msg_pub.bodyrates.x = msg->angular_velocity.x;
   handsfree_msg_pub.bodyrates.y = msg->angular_velocity.y;
   handsfree_msg_pub.bodyrates.z = msg->angular_velocity.z;
+  handsfree_msg_pub.orientation.w = msg->orientation.w;  
+  handsfree_msg_pub.orientation.x = msg->orientation.x;
+  handsfree_msg_pub.orientation.y = msg->orientation.y;
+  handsfree_msg_pub.orientation.z = msg->orientation.z;
 
   /*state_set话题发布的内容*/
   state_est_pub_.publish(handsfree_msg_pub);
